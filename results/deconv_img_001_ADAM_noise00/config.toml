@@ -1,0 +1,17 @@
+algorithm = "ADAM"
+
+[input-paths]
+mode = "synthetic-data"
+png = "/Users/fplessec/Documents/GitHub/matirf_python_plus/problems/deconv/data/measurements/img_001.png"
+json = "/Users/fplessec/Documents/GitHub/matirf_python_plus/problems/deconv/data/measurements/psf_params_example.json"
+normalization = "peak"
+
+[add-noise]
+
+[noise-model]
+
+[algo-params]
+lambda_reg = 0.0
+max_iter = 3000
+K = 10
+EPS = 1e-06

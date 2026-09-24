@@ -1,0 +1,22 @@
+algorithm = "ADMM"
+
+[input-paths]
+mode = "synthetic-data"
+tif = "/Users/fplessec/Documents/GitHub/matirf_python_plus/problems/matirf/data/measurements/synthetic/cell_fibres_vesicles.TIF"
+json = "/Users/fplessec/Documents/GitHub/matirf_python_plus/problems/matirf/data/measurements/synthetic/measurement_parameters.json"
+normalization = "peak"
+
+[oper-params]
+nz = 50
+z0 = 0.0
+zN = 300.0
+normalize = false
+
+[add-noise]
+
+[noise-model]
+
+[algo-params]
+iter = 200
+threshold_ratio = 0.1
+mu = 0.5

@@ -1,0 +1,10 @@
+\begin{center}\begin{adjustbox}{max width=\linewidth}
+\begin{tabular}{llllllll}
+\toprule
+dataset & noise & best (by NMSE) & params & NMSE & PSNR & SSIM & chi2\_ratio \\
+\midrule
+img\_001 & 0 & \textbf{ADAM} & reg=none, lambda=0 & 0.0205 & 24.1 & 0.675 & 7.8e-07 \\
+img\_001 & 0.02 & \textbf{ADAM} & reg=tv, lambda=0.05 & 0.0238 & 23.5 & 0.614 & 0.959 \\
+img\_001 & 0.05 & \textbf{MCMC} & denoiser=TV Bregman, sigma=0.02 & 0.0271 & 22.9 & 0.527 & 0.926 \\
+\bottomrule
+\end{tabular}\end{adjustbox}\end{center}

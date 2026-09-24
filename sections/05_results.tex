@@ -13,15 +13,24 @@ For each (structure, noise) the solver with the best NMSE, and its curated metri
 \IfFileExists{tables/cross_comparison_deconv.tex}{\input{tables/cross_comparison_deconv}}{}
 
 \subsection{Reconstructions by structure and noise}
-The visual heart of the report: truth vs.\ each solver's best reconstruction, one row per noise
-level (depth map + $yz$/$zx$ profiles, exported from the GUI viewers). Figures are written to
-\texttt{figures/} by the analysis; include them here once the run is done, e.g.:
-% \begin{figure}[t]\centering
-%   \includegraphics[width=.32\linewidth]{matirf_cell_fibres_vesicles_ADMM_noise002}\hfill
-%   \includegraphics[width=.32\linewidth]{matirf_cell_fibres_vesicles_ADMM-PnP_noise002}\hfill
-%   \includegraphics[width=.32\linewidth]{matirf_cell_fibres_vesicles_MCMC_noise002}
-%   \caption{cell\_fibres\_vesicles at noise 0.02 --- best setting per solver.}
-% \end{figure}
+The visual heart of the report: each solver's best reconstruction (depth map + $yz$/$zx$
+profiles, exported from the GUI viewers). Figures are generated into \texttt{figures/} by the
+analysis; a fuller grid can be assembled from the files there.
+
+\begin{figure}[H]\centering
+  \includegraphics[width=.9\linewidth]{matirf_cell_fibres_vesicles_ADMM_noise00}
+  \caption{\texttt{cell\_fibres\_vesicles}, no noise --- \textbf{ADMM} (the winner: NMSE 0.04,
+  depth error 4~nm). At zero noise the sparsity prior localises the structure almost exactly.}
+\end{figure}
+
+\begin{figure}[H]\centering
+  \includegraphics[width=.49\linewidth]{matirf_cell_fibres_vesicles_ADMM-PnP_noise005}\hfill
+  \includegraphics[width=.49\linewidth]{matirf_cell_fibres_vesicles_PNP_noise005}
+  \caption{\texttt{cell\_fibres\_vesicles}, noise 0.05. \emph{Left:} \textbf{ADMM-PnP}, the
+  best under noise (NMSE 0.37) --- the denoiser prior holds the structure. \emph{Right:}
+  \textbf{PnP-HQS}, which collapses at the same noise. Same object, same noise: the difference
+  is the method's robustness.}
+\end{figure}
 
 \subsection{Effective parameter ranges}
 The setting that minimised NMSE at each noise level --- the atlas proper. Compare to the
@@ -36,5 +45,11 @@ the PnP-family out-of-memory behaviour on the real \texttt{esoubies} stack.
   {\emph{[pending the run]}}
 
 \subsection{Real data (\texttt{esoubies})}
-No truth, so the reconstruction is judged by \texttt{chi2\_ratio} and by eye (figure in
-\texttt{figures/}).
+No truth, so the reconstruction is judged by \texttt{chi2\_ratio} and by eye.
+
+\begin{figure}[H]\centering
+  \includegraphics[width=.9\linewidth]{matirf_esoubies_ADMM-PnP_native}
+  \caption{\texttt{esoubies} (real measurement, no ground truth) --- reconstructed with
+  ADMM-PnP. The PnP family reconstructs it but is the memory-hungry one on this full-size
+  volume (Sec.~\ref{sec:limits}).}
+\end{figure}

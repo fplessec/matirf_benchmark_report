@@ -1,0 +1,20 @@
+algorithm = "MCMC"
+
+[input-paths]
+mode = "synthetic-data"
+png = "/Users/fplessec/Documents/GitHub/matirf_python_plus/problems/deconv/data/measurements/img_001.png"
+json = "/Users/fplessec/Documents/GitHub/matirf_python_plus/problems/deconv/data/measurements/psf_params_example.json"
+normalization = "peak"
+
+[add-noise]
+gaussian_noise = true
+sigma = 0.05
+seed = 1
+
+[noise-model]
+parameters = "oracle"
+
+[algo-params]
+max_iter = 300
+denoiser = "TV Bregman"
+sigma = 0.02

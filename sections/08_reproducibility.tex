@@ -5,18 +5,19 @@ Every number and figure is regenerable from \texttt{matirf\_python\_plus} (tag \
 
 \paragraph{Run the campaign.}
 \begin{verbatim}
-python -m benchmarks run --minimal --timeout 600   # the ~1h minimal pass
-python -m benchmarks run                            # the full atlas
-python -m benchmarks status --minimal              # progress
-python -m benchmarks stop   --minimal              # stop cleanly (resumable)
+python -m benchmarks run --minimal   # the ~1h minimal pass
+python -m benchmarks run             # the full atlas
+python -m benchmarks status --minimal
+python -m benchmarks stop   --minimal   # stop cleanly, resumable
 \end{verbatim}
-Runs are isolated processes with a per-run timeout; a crash or OOM is contained and the campaign
+Add \texttt{-{}-timeout <s>} to cap each run. Runs are isolated processes with a per-run
+timeout; a crash or OOM is contained and the campaign
 resumes where it stopped. Results land in \texttt{benchmarks/results/<dir>/} (git-ignored: large,
 regenerated).
 
 \paragraph{Build this report.}
 \begin{verbatim}
-python -m benchmarks analyze --minimal   # writes tables/ and figures/ + results/ here
+python -m benchmarks analyze --minimal   # writes tables/ + figures/
 latexmk -pdf main.tex
 \end{verbatim}
 \texttt{analyze.py} reads the durable \texttt{journal.jsonl}, writes the summary tables
@@ -31,5 +32,5 @@ shows. The reconstructions themselves are not committed (large, regenerable from
 
 \paragraph{Theory.}
 The a priori analysis, per-algorithm notes and intrinsic limits are in
-\texttt{matirf\_python\_plus/docs/algorithms/}; the provisional pre-benchmark findings (Étapes
-1--2) in \texttt{docs/benchmark/pre\_benchmark.md}. This report distils them.
+\texttt{docs/algorithms/} (in \texttt{matirf\_python\_plus}); the provisional pre-benchmark
+findings (Étapes 1--2) in \texttt{docs/benchmark/}. This report distils them.

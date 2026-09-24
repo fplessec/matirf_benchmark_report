@@ -1,0 +1,23 @@
+algorithm = "ADAM"
+
+[input-paths]
+mode = "synthetic-data"
+tif = "/Users/fplessec/Documents/GitHub/matirf_python_plus/problems/matirf/data/measurements/synthetic/cell_fibres_vesicles.TIF"
+json = "/Users/fplessec/Documents/GitHub/matirf_python_plus/problems/matirf/data/measurements/synthetic/measurement_parameters.json"
+normalization = "peak"
+
+[oper-params]
+nz = 50
+z0 = 0.0
+zN = 300.0
+normalize = false
+
+[add-noise]
+
+[noise-model]
+
+[algo-params]
+lambda_reg = 0.0
+max_iter = 3000
+K = 10
+EPS = 1e-06

@@ -1,0 +1,10 @@
+\begin{center}\begin{adjustbox}{max width=\linewidth}
+\begin{tabular}{lllllllll}
+\toprule
+dataset & noise & best (by NMSE) & params & NMSE & PSNR & Depth Error (nm) & Stack Recovery & chi2\_ratio \\
+\midrule
+cell\_fibres\_vesicles & 0 & \textbf{ADMM} & kappa=0.1, mu=0.5 & 0.0409 & 31.5 & 4 & 0.498 & 5.48e-08 \\
+cell\_fibres\_vesicles & 0.02 & \textbf{ADMM-PnP} & denoiser=Gaussian, sigma=25, rho=0.1 & 0.174 & 25.2 & 13 & 0.0651 & 0.872 \\
+cell\_fibres\_vesicles & 0.05 & \textbf{ADMM-PnP} & denoiser=Gaussian, sigma=50, rho=0.1 & 0.367 & 22.0 & 26 & 0.0093 & 0.808 \\
+\bottomrule
+\end{tabular}\end{adjustbox}\end{center}
