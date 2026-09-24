@@ -1,7 +1,33 @@
 \section{Intrinsic limits}
 \label{sec:limits}
 
-% Distilled from docs/algorithms/limits.md (Etape 3). One line: on MA-TIRF every wall is the
-% same wall -- the ~47-direction null space -- and the only lever is the prior.
-% TABLE: algorithm | intrinsic wall | failure signature | can it be moved?
-% Optional FIGURE: one failure mode (ADMM emptying the image; collapse under noise).
+These are the walls no parameter choice moves. On MA-TIRF they are all the same wall seen from a
+different side --- the ${\sim}47$-direction null space (Sec.~\ref{sec:problem}) --- and the only
+lever against it is the prior. Full analysis with provenance in
+\texttt{docs/algorithms/limits.md}.
+
+\begin{center}
+\begin{tabular}{p{2.1cm}p{6.2cm}p{4.6cm}}
+\toprule
+algorithm & intrinsic wall & can it be moved? \\
+\midrule
+Adam / PPXA & only as good as the analytic prior $R$; $\lambda\!\to\!0$ noisy/collapsed,
+             $\lambda\!\to\!1$ empty/flat & not by the optimiser --- needs a better prior \\
+ADMM        & $\ell_1$ is the wrong prior for diffuse cells; $\kappa$ high empties the image;
+             $\mu>1.618$ diverges & no --- the wall is the sparsity prior \\
+PnP-HQS     & denoiser scale mismatch + collapse under noise; short schedule & scale fixed by
+             $\div$peak; ceiling is the denoiser \\
+ADMM-PnP    & same denoiser ceiling; $\rho\sigma^2$ coupling; OOM/timeout on full real volumes
+            & needs tiling + a better 3D denoiser \\
+MCMC        & the Metropolis test on $D$ is \textbf{blind to the null space} on MA-TIRF & no on
+             MA-TIRF (structural); works on deconvolution \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\noindent Three problem-level limits sit under all of them on MA-TIRF: the huge null space (depth
+collapse), noise amplified out of proportion along the weak directions, and photograph-scale
+defaults being ${\sim}40\times$ wrong. MCMC's is the sharpest result: its exploration lives in
+$D$'s null space, which by definition does not change $D$, so the acceptance test cannot see it
+--- no setting beats the ridge start on MA-TIRF, while on well-posed deconvolution it works.
+% Optional FIGURE: a failure mode (ADMM emptying the image, or collapse under noise).

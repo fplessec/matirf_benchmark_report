@@ -1,10 +1,29 @@
 \section{Decision guide}
 \label{sec:decision}
 
-% The actionable one-pager. TABLE or small decision tree:
-%   your data -> recommended algorithm -> starting parameters.
-% e.g. sparse object, low noise  -> ADMM (kappa 0.01-0.3, mu 0.5-1)
-%      continuous object, noisy   -> ADMM-PnP (Gaussian/Bilateral, sigma 25-50, rho >= 0.1)
-%      most versatile             -> Adam (TV/SHV, lambda ~0.1)
-%      uncertainty / MMSE (deconv)-> MCMC (TV Bregman, sigma 0.02)
-% Keep this section self-contained: a reader in a hurry reads only this.
+The actionable one page. Starting points below are provisional (from the pre-benchmark, see
+\texttt{docs/benchmark/pre\_benchmark.md}); Sec.~\ref{sec:results} confirms or refines them.
+
+\begin{center}
+\begin{tabular}{p{4.3cm}p{3.0cm}p{5.6cm}}
+\toprule
+your data & use & starting parameters \\
+\midrule
+sparse object, low noise & \textbf{ADMM} & $\kappa \in [0.01, 0.3]$ (raise with noise),
+                          $\mu \in [0.5, 1]$ \\
+continuous object, noisy & \textbf{ADMM-PnP} & Gaussian/Bilateral, $\sigma \in [25, 50]$,
+                          $\rho \ge 0.1$ \\
+most versatile / unsure & \textbf{Adam} & TV or SHV, $\lambda \approx 0.1$ (never $>0.3$;
+                          $\lambda=0$ only on clean data) \\
+uncertainty / MMSE, well-posed & \textbf{MCMC} & TV Bregman, $\sigma \approx 0.02$
+                          (deconvolution; on MA-TIRF it does not beat the ridge start) \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\paragraph{Rules of thumb.}
+Noise demands a \emph{stronger} prior --- the best regularisation grows with the noise level.
+Match the prior to the structure: sparsity (ADMM) for point-like objects, a denoiser (PnP family)
+for continuous ones. Avoid PnP-HQS under noise, and do not spend effort making MCMC win on
+MA-TIRF (it structurally cannot). Every parameter in units of $f$ is on a ${\sim}0.02$ scale, not
+$1$.

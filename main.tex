@@ -22,9 +22,14 @@
 \maketitle
 
 \begin{abstract}
-% TODO one paragraph: the two inverse problems, what is compared (six algorithms), and the
-% headline finding — on MA-TIRF the prior is the ceiling (the operator determines only 2--3 of
-% ~50 depth directions), so the algorithm choice follows the object's structure and the noise.
+\noindent We compare six reconstruction algorithms --- Adam, PPXA, ADMM, PnP-HQS, ADMM-PnP and
+MCMC --- on the MA-TIRF 3D depth-reconstruction problem and, as a well-posed companion, on 2D
+deconvolution. MA-TIRF is severely ill-posed: the forward operator determines only two to three
+of ${\sim}50$ depth directions per column, so the prior --- not the optimiser --- sets the
+ceiling. The headline is therefore not a single winner but a map: match the prior to the object
+(sparsity for point-like structures, a plug-and-play denoiser for continuous ones) and raise it
+with the noise. The report is a hand-over document: for each algorithm it states how to use it,
+when it works, and the intrinsic limit no parameter moves.
 \end{abstract}
 
 \tableofcontents

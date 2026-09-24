@@ -1,27 +1,87 @@
 \section{Experimental setup}
 \label{sec:setup}
 
+The campaign is a theory-guided \emph{atlas}: for each solver we sweep only the axes the analysis
+says move the \emph{solution}, and fix the convergence knobs. The physical operator is used
+throughout ($\texttt{normalize}=$\texttt{False}) and $g$ is peak-normalised. Runs are isolated,
+timed and resumable (\texttt{benchmarks/runner.py}). This report uses the minimal pass (one
+composite truth, tightened grids); the full atlas (two truths, wider grids) is in
+\texttt{benchmarks/campaign.py} for a deeper run.
+
 \subsection{Datasets and noise}
-% TABLE: datasets x noise. Synthetic MA-TIRF truths cell_fibres_vesicles, vesicles (noise 0 /
-% gaussian 0.02 / gaussian 0.05); real esoubies (native noise, no truth); deconv img_001.
-% Operator convention: physical (normalize=False); g peak-normalized.
-% FIGURE: the two synthetic truths (depth map + profiles, from the GUI export view-1).
+\begin{center}
+\begin{tabular}{lllc}
+\toprule
+problem & dataset & kind & noise levels \\
+\midrule
+MA-TIRF & \texttt{cell\_fibres\_vesicles} & synthetic (has truth), composite & $0,\ 0.02,\ 0.05$ \\
+MA-TIRF & \texttt{esoubies} & real (no truth) & native \\
+deconv  & \texttt{img\_001} & synthetic (has truth) & $0,\ 0.02,\ 0.05$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+Noise is added Gaussian ($\sigma$ relative to the peak); with added noise the oracle variance is
+used, else the noise is estimated from $g$.
 
 \subsection{Parameter grids (the atlas axes)}
-% TABLE: per solver, the swept axis (moves the solution) and the fixed knobs (from the notes).
+\begin{center}
+\begin{tabular}{ll}
+\toprule
+solver & swept grid (minimal pass) \\
+\midrule
+ADAM     & $R\in\{$none, TV, SHV$\}\times\lambda\in\{.05,.1,.2,.35\}$ \\
+ADMM     & $\kappa\in\{.01,.1,.3\}\times\mu\in\{.5,1\}$ \\
+PnP      & denoiser$\in\{$Gaussian, Bilateral$\}\times\sigma\in\{25,50\}$, $\lambda_{kz}=10^{-2}$ \\
+ADMM-PnP & denoiser$\in\{$Gaussian, Bilateral$\}\times\sigma\in\{25,50\}\times\rho\in\{.1,1\}$ \\
+MCMC     & denoiser $=$ TV Bregman $\times\ \sigma\in\{.01,.02,.03\}$ \\
+PPXA     & confirmation only (TV/SHV, $\lambda=.1$): Adam $=$ PPXA \\
+\bottomrule
+\end{tabular}
+\end{center}
+Each solver also runs its no-prior / no-denoiser baseline. Grid endpoints are chosen to span the
+predicted useful bands \emph{and} the failure edges (e.g.\ ADAM $\lambda=.35$, ADMM $\kappa=.3$)
+so the limits of Sec.~\ref{sec:limits} are visible.
+
+\subsection{Iterations, stopping and initialisation}
+\begin{center}
+\begin{tabular}{lllll}
+\toprule
+solver & iterations & stop & step & init \\
+\midrule
+ADAM     & $\le 3000$ & $\text{EPS}=10^{-6}$ (every $K{=}10$) & $\text{lr}=0.1$ & ridge, $\lambda_{rr}=s_2^2$ \\
+PPXA     & $\le 3000$ & $\text{EPS}=10^{-6}$ & $\gamma=0.01$, relax $1.5$ & ridge, $s_2^2$ \\
+ADMM     & $200$ fixed & --- & $\mu$ (dual step) & data step, ridge $\mu$ \\
+PnP      & $16$ fixed & --- (annealing) & schedule $\alpha_k$ & ridge, $s_2^2$ \\
+ADMM-PnP & $50$ fixed & --- & $\rho$ & ridge, $s_2^2$ \\
+MCMC     & $300$ ($25\%$ burn-in) & --- & $\sigma$, temp.\ (auto) & ridge, $s_2^2$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+Only Adam and PPXA stop early (the loss plateaus on the near-flat MA-TIRF valley; a tight EPS
+would chase negligible improvements, so it is set to $10^{-6}$). The others run a fixed budget
+the notes show is enough --- except PnP, whose $16$ steps are a short annealing schedule, not a
+convergence. No run starts from the adjoint (${\sim}850\times$ too large on MA-TIRF).
 
 \subsection{Metrics}
 \label{sec:metrics}
-% Each metric answers one question. Keep the table tight.
-% - nmse            overall error, scale-invariant (f fixed up to a positive factor). 0 perfect.
-% - psnr            same information as nmse but in dB, the image-processing currency (companion).
-% - depth_error_nm  axial localization -- THE MA-TIRF question ("how far from the glass?").
-% - stack_recovery  axial super-resolution: fraction of >=30 nm-separated pairs also resolved.
-% - chi2_ratio      data fit without a truth (~1 good, <<1 overfits noise, >>1 over-regularizes)
-%                   -- the only quality metric that reads on the real esoubies data.
-% - reg_share       how regularized (1 - R(f_lambda)/R(f_0)); Adam/PPXA only.
-% [deconv only] ssim structural similarity (reliable in 2D; unreliable on the anisotropic volume).
-% Also reported per run (practicality, not a quality metric): runtime, peak memory, status
-% (ok / rejected / OOM / timeout).
-% Dropped: MSE/MAE (redundant, not scale-invariant), FSC (H acts only in depth), 3D SSIM
-% (anisotropy), Sinkhorn (cost; depth_error says the same).  <-- see metrics discussion, TBD.
+Each metric answers one question; truth-comparison metrics come from \texttt{core.metrics}
+(scale-aligned, since $f$ is fixed only up to a positive factor), \texttt{chi2\_ratio} from the
+runner (it needs no truth).
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+metric & question & where \\
+\midrule
+NMSE            & overall error ($0$ perfect) & MA-TIRF, deconv \\
+PSNR (dB)       & same, in the image-processing currency (companion) & MA-TIRF, deconv \\
+Depth Error (nm)& \textbf{axial localisation} --- the MA-TIRF question & MA-TIRF \\
+Stack Recovery  & axial super-resolution ($\ge 30$~nm pairs resolved) & MA-TIRF \\
+SSIM            & structural similarity (reliable in 2D) & deconv only \\
+chi2\_ratio     & data fit without a truth ($\approx 1$ good) & all, incl.\ \texttt{esoubies} \\
+\bottomrule
+\end{tabular}
+\end{center}
+PSNR is monotone in NMSE (same ranking) --- kept as the familiar dB companion, not an
+independent axis. SSIM is unreliable on the anisotropic MA-TIRF volume, so it is deconv-only.
+Each run also records runtime, peak memory and status (ok / rejected / OOM / timeout): a solver
+that OOMs on a real stack is disqualified by that alone, whatever its NMSE.

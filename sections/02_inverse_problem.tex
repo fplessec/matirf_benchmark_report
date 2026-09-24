@@ -1,14 +1,57 @@
 \section{The inverse problem}
 \label{sec:problem}
 
-% Distilled from matirf_python_plus/docs/algorithms/00_foundation.md — keep it short.
-% TODO:
-% - g = H f + n, f >= 0. The operator H (per-column mixing of nz depth planes into n_angles).
-% - The spectrum: s1=38.9, s2=6.02, s3=0.562, s4=0.033; only 2--3 determined directions per
-%   column, ~47/50 in the null space. => the prior decides the null space.
-%   FIGURE: spectrum bar chart (s1..s4 + the null-space floor).
-% - The scale: g peak-normalized, f peaks ~0.02 on MA-TIRF (~1 on deconv). Why photograph-scale
-%   defaults are ~40x wrong. FIGURE: f vs g scale.
-% - Bayesian view: MAP vs MMSE; the shared objective L(f) = (1-lambda) D + lambda kappa R, f>=0.
-%   D sits at ~1/2 at the truth (chi-square anchor); kappa puts R on D's scale so lambda reads
-%   as a regularization share.
+\subsection{Forward model}
+Both problems are linear with a non-negativity constraint:
+\begin{equation}
+g = H f + n, \qquad f \ge 0,
+\end{equation}
+where $f$ is the unknown object, $H$ the known forward operator, $n$ the detector noise, and $g$
+the measurement (peak-normalised, $\max g = 1$). For MA-TIRF, $H$ acts \emph{independently in
+each lateral pixel}: it mixes the $n_z$ depth planes of a column into the $n_\theta$ measured
+angle values, so it is one small $n_\theta \times n_z$ matrix applied to every column. For
+deconvolution, $H$ is a convolution with a known PSF.
+
+\subsection{Why MA-TIRF is hard: the spectrum of $H$}
+The per-column matrix has singular values that collapse by orders of magnitude (synthetic
+microscope: 13 angles, $n_z = 50$ over $0$--$300$~nm, physical operator, $\texttt{normalize}=$
+\texttt{False}):
+\begin{center}
+\begin{tabular}{lccccc}
+\toprule
+ & $s_1$ & $s_2$ & $s_3$ & $s_4$ & $s_5\ldots$ \\
+\midrule
+$\sigma$   & $38.9$ & $6.02$ & $0.562$ & $0.033$ & $<10^{-3}$ \\
+$\sigma^2$ & $1.5\times10^{3}$ & $36$ & $0.32$ & $1.1\times10^{-3}$ & --- \\
+\bottomrule
+\end{tabular}
+\end{center}
+Only two to three depth directions per column are determined by the data; the other ${\sim}47$
+of $50$ lie in the numerical null space of $H$. \textbf{The prior --- not the optimiser ---
+decides those ${\sim}47$ directions.} This single fact drives every result in this report: the
+ceiling on a reconstruction is set by the prior, and the universal failure mode is
+\emph{depth collapse} (the object slides or flattens in $z$, exactly where the data are blind).
+
+% FIGURE: figures/spectrum.png -- bar chart of s1..s4 and the null-space floor.
+
+\subsection{Scale of the unknown}
+Along the best-determined direction $g_1 = s_1 f_1$ with $\max g = 1$, so $f$ peaks at
+$\approx 1/s_1 \approx 0.02$ on MA-TIRF (and $\approx 1$ on deconvolution). Any parameter in
+units of $f$ --- a step size, a proposal noise, a sparsity threshold --- must be compared to
+${\sim}0.02$, not to $1$; a default tuned for a photograph is $\approx s_1 \approx 40\times$ off.
+This is the most common way an algorithm that works elsewhere silently fails here.
+
+\subsection{Estimators and the objective}
+Two estimators appear. The \emph{MAP} solvers (Adam, PPXA, ADMM, PnP, ADMM-PnP) minimise an
+energy
+\begin{equation}
+L(f) = (1-\lambda)\, D(Hf, g) \;+\; \lambda\,\kappa\, R(f), \qquad f \ge 0,\ \lambda \in [0,1],
+\label{eq:objective}
+\end{equation}
+with $D$ the per-pixel negative log-likelihood --- $\|Hf-g\|^2/(2 b\, n_g)$ for Gaussian noise
+of variance $b$ --- which carries the noise level and sits at $\approx \tfrac12$ at the truth
+(a $\chi^2$ anchor). $R$ is the regulariser; the scalar $\kappa = 1/R(f_{\text{init}})$ rescales
+it onto $D$'s scale so that $\lambda$ reads as a regularisation \emph{share} rather than a dead
+knob. The \emph{MMSE} solver (MCMC) returns the posterior mean instead, by sampling. ADMM, PnP
+and ADMM-PnP hard-wire their prior (a soft threshold, or a denoiser) and do not use
+$R$, $\lambda$ or $\kappa$.

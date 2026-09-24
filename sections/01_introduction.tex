@@ -1,11 +1,22 @@
 \section{Introduction}
 \label{sec:intro}
 
-% Audience: the successor and the team. Purpose: choose and tune a reconstruction algorithm.
-% TODO:
-% - MA-TIRF microscopy and the 3D reconstruction problem (depth from a set of incidence angles).
-% - 2D deconvolution as the well-posed companion problem (same objective, no null space).
-% - What this report compares: six algorithms (Adam, PPXA, ADMM, PnP, ADMM-PnP, MCMC) on two
-%   inverse problems, over structures and noise levels.
-% - How to read it: Sec.~\ref{sec:results} is the atlas; Sec.~\ref{sec:decision} is the
-%   one-page decision guide.
+Multi-angle total internal reflection fluorescence (MA-TIRF) microscopy images a sample at
+several illumination incidence angles. Each angle probes a different, exponentially decaying
+depth range near the coverslip, so the set of angle images encodes the axial ($z$) distribution
+of the fluorophores. Recovering that distribution --- a 3D volume from a handful of 2D angle
+images --- is a linear inverse problem, and a severely ill-posed one: the forward operator
+determines only two to three depth directions out of ${\sim}50$ (Sec.~\ref{sec:problem}).
+
+This report compares six reconstruction algorithms on that problem, and on 2D deconvolution as
+a well-posed companion where the same algorithms are easy to sanity-check. It is written for
+whoever maintains \texttt{matirf\_python\_plus} next: the goal is to know, for each algorithm,
+\emph{how to use it}, \emph{when it works}, and \emph{what it cannot do}.
+
+\paragraph{How to read it.}
+Sec.~\ref{sec:problem} states the problem and the one fact that governs everything (the null
+space). Sec.~\ref{sec:algorithms} recalls the six algorithms and their parameters.
+Sec.~\ref{sec:setup} is the protocol (datasets, grids, metrics). Sec.~\ref{sec:results} is the
+core --- the atlas of what wins where and with which parameters. Sec.~\ref{sec:limits} states
+the intrinsic limits, and Sec.~\ref{sec:decision} is a one-page decision guide. In a hurry, read
+only Sec.~\ref{sec:decision}.

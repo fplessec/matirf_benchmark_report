@@ -1,10 +1,35 @@
 \section{Reproducibility}
 \label{sec:repro}
 
-% Every figure/number is regenerable. TODO:
-% - Each showcase reconstruction is stored in results/<figure_id>/ as config.toml (the exact
-%   run) + f.tif (the reconstruction) [+ truth.tif when synthetic]. Re-running matirf_python_plus
-%   on that config.toml reproduces f.tif.
-% - The full campaign lives in matirf_python_plus/benchmarks (campaign.py + runner.py); how to
-%   launch/resume/stop it.
-% - Code version: the v2.0 tag of matirf_python_plus.
+Every number and figure is regenerable from \texttt{matirf\_python\_plus} (tag \texttt{v2.0}).
+
+\paragraph{Run the campaign.}
+\begin{verbatim}
+python -m benchmarks run --minimal --timeout 600   # the ~1h minimal pass
+python -m benchmarks run                            # the full atlas
+python -m benchmarks status --minimal              # progress
+python -m benchmarks stop   --minimal              # stop cleanly (resumable)
+\end{verbatim}
+Runs are isolated processes with a per-run timeout; a crash or OOM is contained and the campaign
+resumes where it stopped. Results land in \texttt{benchmarks/results/<dir>/} (git-ignored: large,
+regenerated).
+
+\paragraph{Build this report.}
+\begin{verbatim}
+python -m benchmarks analyze --minimal   # writes tables/ and figures/ + results/ here
+latexmk -pdf main.tex
+\end{verbatim}
+\texttt{analyze.py} reads the durable \texttt{journal.jsonl}, writes the summary tables
+(\texttt{results/summary/*.md} and \texttt{tables/*.tex}), copies the reproducible showcase runs
+into \texttt{results/<figure\_id>/} (\texttt{config.toml} + \texttt{metrics.json}), and exports
+their depth-map/profile PNGs into \texttt{figures/}.
+
+\paragraph{Reproduce one figure.}
+Each \texttt{results/<figure\_id>/} holds the exact \texttt{config.toml}. Re-running
+\texttt{matirf\_python\_plus} on it reproduces the reconstruction \texttt{f} that the figure
+shows. The reconstructions themselves are not committed (large, regenerable from the config).
+
+\paragraph{Theory.}
+The a priori analysis, per-algorithm notes and intrinsic limits are in
+\texttt{matirf\_python\_plus/docs/algorithms/}; the provisional pre-benchmark findings (Étapes
+1--2) in \texttt{docs/benchmark/pre\_benchmark.md}. This report distils them.

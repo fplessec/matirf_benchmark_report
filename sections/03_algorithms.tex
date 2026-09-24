@@ -1,21 +1,32 @@
 \section{The algorithms}
 \label{sec:algorithms}
 
-% One short subsection per algorithm. Principle, prior, the parameters that matter (critical vs
-% comfort). Distilled from docs/algorithms/*.md — do not repeat the theory, point to it.
+All six consume the same \texttt{core.Objective} and forward operator, so there is one
+implementation of each, shared by both problems. Full derivations and per-parameter analysis are
+in \texttt{matirf\_python\_plus/docs/algorithms/}; this section is a one-paragraph recall.
 
-\subsection{Adam / PPXA --- general MAP minimizers}
-% minimize (1-lambda) D + lambda kappa R exactly; the reconstruction is only as good as R.
-% params: reg (prior), lambda (share), lr / gamma (speed).
+\paragraph{Adam / PPXA --- general MAP minimisers.}
+Both minimise Eq.~\eqref{eq:objective} to the same optimum (Adam by gradient descent, PPXA by
+parallel proximal steps), so the reconstruction is only as good as the analytic prior $R$. Key
+parameter: $\lambda$ (the regularisation share) with a chosen $R$ (TV, SHV, \dots). Adam's step
+$\text{lr}$ and PPXA's $\gamma$ set speed, not the solution.
 
-\subsection{ADMM --- sparsity (soft-threshold) prior}
-% soft-threshold; kappa = threshold, mu = penalty/dual-step. Unbeatable at 0 noise on sparse.
+\paragraph{ADMM --- sparsity (soft-threshold) prior.}
+Alternating data step, soft-threshold, dual update. The prior is $\ell_1$ sparsity, applied by
+the threshold $\kappa$; $\mu$ is the penalty (and, coupled, the dual step, capped near $1.618$).
+Excellent on sparse objects, ill-suited to diffuse ones.
 
-\subsection{PnP-HQS --- plug-and-play denoiser prior, annealing schedule}
-% denoiser IS the prior; sigma, lambda_kz; scale-free (255 f / peak).
+\paragraph{PnP-HQS --- plug-and-play denoiser, annealing schedule.}
+Half-quadratic splitting where a denoiser \emph{is} the prior, run over a short annealing
+schedule (not to convergence). Key: the denoiser, $\sigma$ (denoising level), $\lambda_{kz}$
+(final data weight). Scale-free (it feeds the denoiser $255\,f/\text{peak}$).
 
-\subsection{ADMM-PnP --- plug-and-play denoiser prior, dual variable}
-% denoiser prior with a dual variable; rho, sigma; prior strength ~ rho sigma^2.
+\paragraph{ADMM-PnP --- plug-and-play denoiser, dual variable.}
+The augmented-Lagrangian counterpart of PnP: same denoiser prior, but a dual variable instead of
+a schedule, run to a fixed point. Key: the denoiser, $\sigma$, and $\rho$ (penalty); the prior
+strength scales as $\rho\sigma^2$.
 
-\subsection{MCMC --- MMSE by posterior sampling}
-% Metropolis-Hastings on D; denoiser as prior; sigma, temperature; returns the post-burn-in mean.
+\paragraph{MCMC --- MMSE by posterior sampling.}
+A Metropolis-Hastings chain on the data term $D$, with a denoiser as the prior; it returns the
+mean of the states after burn-in. Key: the denoiser (TV Bregman here), $\sigma$ (exploration
+and denoising, a fraction of the peak), and the acceptance temperature (calibrated).

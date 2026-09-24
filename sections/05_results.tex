@@ -1,22 +1,40 @@
 \section{Results --- the atlas}
 \label{sec:results}
 
-% The core. Figure-rich. Every figure has a reproducible run behind it in results/ (config.toml
-% + f.tif); see Sec.~\ref{sec:repro}.
+The tables and figures in this section are generated from the campaign by
+\texttt{benchmarks/analyze.py} (Sec.~\ref{sec:repro}); every number and every reconstruction is
+reproducible from the run it names. \texttt{\textbackslash IfFileExists} guards let the document
+build before the run has finished.
+
+\subsection{Which solver wins, and where}
+For each (structure, noise) the solver with the best NMSE, and its curated metrics.
+\IfFileExists{tables/cross_comparison_matirf.tex}{\input{tables/cross_comparison_matirf}}%
+  {\emph{[pending: run \texttt{python -m benchmarks analyze -{}-minimal}]}}
+\IfFileExists{tables/cross_comparison_deconv.tex}{\input{tables/cross_comparison_deconv}}{}
 
 \subsection{Reconstructions by structure and noise}
-% SHOWCASE FIGURE per structure: truth | Adam | ADMM | PnP | ADMM-PnP | MCMC, one row per noise
-% (0 / .02 / .05), from the GUI export (depth map + profiles). The visual heart of the report.
+The visual heart of the report: truth vs.\ each solver's best reconstruction, one row per noise
+level (depth map + $yz$/$zx$ profiles, exported from the GUI viewers). Figures are written to
+\texttt{figures/} by the analysis; include them here once the run is done, e.g.:
+% \begin{figure}[t]\centering
+%   \includegraphics[width=.32\linewidth]{matirf_cell_fibres_vesicles_ADMM_noise002}\hfill
+%   \includegraphics[width=.32\linewidth]{matirf_cell_fibres_vesicles_ADMM-PnP_noise002}\hfill
+%   \includegraphics[width=.32\linewidth]{matirf_cell_fibres_vesicles_MCMC_noise002}
+%   \caption{cell\_fibres\_vesicles at noise 0.02 --- best setting per solver.}
+% \end{figure}
 
-\subsection{Metric vs parameter (the effective ranges)}
-% CURVES per solver: nmse vs its swept axis (lambda / kappa / rho / sigma), one curve per noise.
-% TABLE per solver: parameter | predicted range (notes) | effective range (measured) | comment.
+\subsection{Effective parameter ranges}
+The setting that minimised NMSE at each noise level --- the atlas proper. Compare to the
+predicted ranges in \texttt{docs/algorithms/}.
+\IfFileExists{tables/effective_ranges.tex}{\input{tables/effective_ranges}}%
+  {\emph{[pending the run]}}
 
-\subsection{Which algorithm wins, and where}
-% TABLE: structure x noise -> best algorithm + nmse + depth_error_nm + stack_recovery (+ psnr).
+\subsection{Rejections, failures and cost}
+Rejection rate, dominant realism-check findings, runtime and peak memory per solver --- including
+the PnP-family out-of-memory behaviour on the real \texttt{esoubies} stack.
+\IfFileExists{tables/rejects_and_cost.tex}{\input{tables/rejects_and_cost}}%
+  {\emph{[pending the run]}}
 
-\subsection{Rejections and failures}
-% TABLE: per solver, rejection rate and dominant cause (empty / collapsed / OOM / timeout).
-
-\subsection{Real data (esoubies)}
-% FIGURE: best algorithm's reconstruction (no truth -> chi2_ratio + visual only).
+\subsection{Real data (\texttt{esoubies})}
+No truth, so the reconstruction is judged by \texttt{chi2\_ratio} and by eye (figure in
+\texttt{figures/}).
