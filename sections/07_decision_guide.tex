@@ -1,0 +1,10 @@
+\section{Decision guide}
+\label{sec:decision}
+
+% The actionable one-pager. TABLE or small decision tree:
+%   your data -> recommended algorithm -> starting parameters.
+% e.g. sparse object, low noise  -> ADMM (kappa 0.01-0.3, mu 0.5-1)
+%      continuous object, noisy   -> ADMM-PnP (Gaussian/Bilateral, sigma 25-50, rho >= 0.1)
+%      most versatile             -> Adam (TV/SHV, lambda ~0.1)
+%      uncertainty / MMSE (deconv)-> MCMC (TV Bregman, sigma 0.02)
+% Keep this section self-contained: a reader in a hurry reads only this.

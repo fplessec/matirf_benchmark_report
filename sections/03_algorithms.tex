@@ -1,0 +1,21 @@
+\section{The algorithms}
+\label{sec:algorithms}
+
+% One short subsection per algorithm. Principle, prior, the parameters that matter (critical vs
+% comfort). Distilled from docs/algorithms/*.md — do not repeat the theory, point to it.
+
+\subsection{Adam / PPXA --- general MAP minimizers}
+% minimize (1-lambda) D + lambda kappa R exactly; the reconstruction is only as good as R.
+% params: reg (prior), lambda (share), lr / gamma (speed).
+
+\subsection{ADMM --- sparsity (soft-threshold) prior}
+% soft-threshold; kappa = threshold, mu = penalty/dual-step. Unbeatable at 0 noise on sparse.
+
+\subsection{PnP-HQS --- plug-and-play denoiser prior, annealing schedule}
+% denoiser IS the prior; sigma, lambda_kz; scale-free (255 f / peak).
+
+\subsection{ADMM-PnP --- plug-and-play denoiser prior, dual variable}
+% denoiser prior with a dual variable; rho, sigma; prior strength ~ rho sigma^2.
+
+\subsection{MCMC --- MMSE by posterior sampling}
+% Metropolis-Hastings on D; denoiser as prior; sigma, temperature; returns the post-burn-in mean.

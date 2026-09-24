@@ -1,0 +1,14 @@
+\section{The inverse problem}
+\label{sec:problem}
+
+% Distilled from matirf_python_plus/docs/algorithms/00_foundation.md — keep it short.
+% TODO:
+% - g = H f + n, f >= 0. The operator H (per-column mixing of nz depth planes into n_angles).
+% - The spectrum: s1=38.9, s2=6.02, s3=0.562, s4=0.033; only 2--3 determined directions per
+%   column, ~47/50 in the null space. => the prior decides the null space.
+%   FIGURE: spectrum bar chart (s1..s4 + the null-space floor).
+% - The scale: g peak-normalized, f peaks ~0.02 on MA-TIRF (~1 on deconv). Why photograph-scale
+%   defaults are ~40x wrong. FIGURE: f vs g scale.
+% - Bayesian view: MAP vs MMSE; the shared objective L(f) = (1-lambda) D + lambda kappa R, f>=0.
+%   D sits at ~1/2 at the truth (chi-square anchor); kappa puts R on D's scale so lambda reads
+%   as a regularization share.

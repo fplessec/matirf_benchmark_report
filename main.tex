@@ -1,0 +1,45 @@
+\documentclass[11pt]{article}
+
+\usepackage[a4paper,margin=2.4cm]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{booktabs}
+\usepackage{siunitx}
+\usepackage{xcolor}
+\usepackage{caption}
+\usepackage[hidelinks]{hyperref}
+
+\graphicspath{{figures/}}
+
+% keep it short: the register is technical hand-over, not a journal article.
+\title{Reconstruction algorithms for MA-TIRF 3D and 2D deconvolution\\[2pt]
+       \large A comparative benchmark}
+\author{Ferdinand Plesse--Costa}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+% TODO one paragraph: the two inverse problems, what is compared (six algorithms), and the
+% headline finding — on MA-TIRF the prior is the ceiling (the operator determines only 2--3 of
+% ~50 depth directions), so the algorithm choice follows the object's structure and the noise.
+\end{abstract}
+
+\tableofcontents
+\bigskip
+
+\input{sections/01_introduction}
+\input{sections/02_inverse_problem}
+\input{sections/03_algorithms}
+\input{sections/04_setup}
+\input{sections/05_results}
+\input{sections/06_limits}
+\input{sections/07_decision_guide}
+\input{sections/08_reproducibility}
+
+\bibliographystyle{plain}
+\bibliography{refs}
+
+\end{document}

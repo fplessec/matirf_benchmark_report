@@ -1,0 +1,22 @@
+\section{Results --- the atlas}
+\label{sec:results}
+
+% The core. Figure-rich. Every figure has a reproducible run behind it in results/ (config.toml
+% + f.tif); see Sec.~\ref{sec:repro}.
+
+\subsection{Reconstructions by structure and noise}
+% SHOWCASE FIGURE per structure: truth | Adam | ADMM | PnP | ADMM-PnP | MCMC, one row per noise
+% (0 / .02 / .05), from the GUI export (depth map + profiles). The visual heart of the report.
+
+\subsection{Metric vs parameter (the effective ranges)}
+% CURVES per solver: nmse vs its swept axis (lambda / kappa / rho / sigma), one curve per noise.
+% TABLE per solver: parameter | predicted range (notes) | effective range (measured) | comment.
+
+\subsection{Which algorithm wins, and where}
+% TABLE: structure x noise -> best algorithm + nmse + depth_error_nm + stack_recovery (+ psnr).
+
+\subsection{Rejections and failures}
+% TABLE: per solver, rejection rate and dominant cause (empty / collapsed / OOM / timeout).
+
+\subsection{Real data (esoubies)}
+% FIGURE: best algorithm's reconstruction (no truth -> chi2_ratio + visual only).

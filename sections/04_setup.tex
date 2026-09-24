@@ -1,0 +1,27 @@
+\section{Experimental setup}
+\label{sec:setup}
+
+\subsection{Datasets and noise}
+% TABLE: datasets x noise. Synthetic MA-TIRF truths cell_fibres_vesicles, vesicles (noise 0 /
+% gaussian 0.02 / gaussian 0.05); real esoubies (native noise, no truth); deconv img_001.
+% Operator convention: physical (normalize=False); g peak-normalized.
+% FIGURE: the two synthetic truths (depth map + profiles, from the GUI export view-1).
+
+\subsection{Parameter grids (the atlas axes)}
+% TABLE: per solver, the swept axis (moves the solution) and the fixed knobs (from the notes).
+
+\subsection{Metrics}
+\label{sec:metrics}
+% Each metric answers one question. Keep the table tight.
+% - nmse            overall error, scale-invariant (f fixed up to a positive factor). 0 perfect.
+% - psnr            same information as nmse but in dB, the image-processing currency (companion).
+% - depth_error_nm  axial localization -- THE MA-TIRF question ("how far from the glass?").
+% - stack_recovery  axial super-resolution: fraction of >=30 nm-separated pairs also resolved.
+% - chi2_ratio      data fit without a truth (~1 good, <<1 overfits noise, >>1 over-regularizes)
+%                   -- the only quality metric that reads on the real esoubies data.
+% - reg_share       how regularized (1 - R(f_lambda)/R(f_0)); Adam/PPXA only.
+% [deconv only] ssim structural similarity (reliable in 2D; unreliable on the anisotropic volume).
+% Also reported per run (practicality, not a quality metric): runtime, peak memory, status
+% (ok / rejected / OOM / timeout).
+% Dropped: MSE/MAE (redundant, not scale-invariant), FSC (H acts only in depth), 3D SSIM
+% (anisotropy), Sinkhorn (cost; depth_error says the same).  <-- see metrics discussion, TBD.
