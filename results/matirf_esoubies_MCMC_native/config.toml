@@ -18,5 +18,9 @@ normalize = false
 
 [algo-params]
 max_iter = 300
+K = 50
 denoiser = "TV Bregman"
 sigma = 0.01
+temperature = 1.0
+init = "ridge"
+lambda_rr = 5.0

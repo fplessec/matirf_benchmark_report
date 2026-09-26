@@ -17,7 +17,10 @@ normalize = false
 [noise-model]
 
 [algo-params]
-iter = 16
-denoiser = "Bilateral"
-sigma = 25.0
-lambda_kz = 0.01
+iter = 40
+denoiser = "TV Bregman"
+sigma = 40.0
+lambda_kz = 12.0
+init = "ridge"
+lambda_rr = 36.24
+delta = 0.0714046275583453

@@ -18,5 +18,5 @@ normalize = false
 
 [algo-params]
 iter = 200
-threshold_ratio = 0.01
-mu = 1.0
+mu = 0.5
+threshold_ratio = 0.1

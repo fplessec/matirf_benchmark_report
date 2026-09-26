@@ -1,0 +1,28 @@
+## MCMC — standard vs optimal
+
+### matirf
+
+| use | dataset | noise | params | NMSE | PSNR | Depth Error (nm) | Stack Recovery | chi2_ratio |
+|---|---|---|---|---|---|---|---|---|
+| standard | cell | 0 | denoiser=TV Bregman, sigma=0.02, lambda_rr=38.863, iter=300 | 0.428 | 17.5 | 20 | 1 | 3.22e-05 |
+| optimal | cell | 0 | denoiser=Gaussian, sigma=0.01, lambda_rr=5, iter=300 | 0.227 | 20.2 | 11 | 1 | 1.35e-05 |
+| standard | cell | 0.02 | denoiser=TV Bregman, sigma=0.02, lambda_rr=38.863, iter=300 | 0.436 | 17.4 | 20 | 0.985 | 0.724 |
+| optimal | cell | 0.02 | denoiser=TV Bregman, sigma=0.01, lambda_rr=5, iter=300 | 0.235 | 20.1 | 13 | 0.742 | 0.894 |
+| standard | cell | 0.05 | denoiser=TV Bregman, sigma=0.02, lambda_rr=38.863, iter=300 | 0.512 | 16.7 | 26 | 0.924 | 0.64 |
+| optimal | cell | 0.05 | denoiser=TV Bregman, sigma=0.01, lambda_rr=5, iter=300 | 0.453 | 17.2 | 31 | 0.561 | 0.822 |
+| optimal | esoubies | native | denoiser=TV Bregman, sigma=0.01, lambda_rr=5, iter=300 | — | — | — | — | 53.2 |
+| standard | fibres | 0 | denoiser=TV Bregman, sigma=0.02, lambda_rr=38.863, iter=300 | 0.314 | 29.1 | 45 | 0.991 | 0.811 |
+| optimal | fibres | 0 | denoiser=Gaussian, sigma=0.01, lambda_rr=5, iter=300 | 0.115 | 33.4 | 23 | 0.991 | 0.121 |
+| standard / optimal | fibres | 0.02 | denoiser=TV Bregman, sigma=0.02, lambda_rr=38.863, iter=300 | 0.429 | 27.7 | 61 | 0.966 | 0.735 |
+| standard / optimal | fibres | 0.05 | denoiser=TV Bregman, sigma=0.02, lambda_rr=38.863, iter=300 | 0.772 | 25.2 | 96 | 0.793 | 0.477 |
+| standard | vesicles | 0 | denoiser=TV Bregman, sigma=0.02, lambda_rr=38.863, iter=300 | 0.425 | 29.8 | 38 | 1 | 0.52 |
+| optimal | vesicles | 0 | denoiser=Gaussian, sigma=0.01, lambda_rr=5, iter=300 | 0.166 | 33.9 | 19 | 1 | 0.0914 |
+| standard / optimal | vesicles | 0.02 | denoiser=TV Bregman, sigma=0.02, lambda_rr=38.863, iter=300 | 0.512 | 29.0 | 61 | 1 | 0.609 |
+| standard / optimal | vesicles | 0.05 | denoiser=TV Bregman, sigma=0.02, lambda_rr=38.863, iter=300 | 0.799 | 27.1 | 110 | 1 | 0.435 |
+
+### deconv
+
+| use | dataset | noise | params | NMSE | PSNR | SSIM | chi2_ratio |
+|---|---|---|---|---|---|---|---|
+| optimal | img_001 | 0.02 | denoiser=TV Bregman, sigma=0.03 | 0.0245 | 23.4 | 0.596 | 0.98 |
+

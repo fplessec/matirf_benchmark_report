@@ -1,0 +1,47 @@
+\section{ADMM-PnP --- a denoiser as the prior, with a dual variable}
+\label{sec:admm_pnp}
+
+\paragraph{How it works.}
+ADMM-PnP is the augmented-Lagrangian counterpart of PnP: the same ``data vs denoiser'' split, but
+a \textbf{dual variable} $u$ instead of an annealing schedule, so $\rho$ and $\sigma$ stay fixed
+and the iteration runs to a fixed point:
+\begin{quote}\small
+$x \leftarrow (H^{\!\top}\!H+\rho I)^{-1}(H^{\!\top} g + \rho(v-u))$ (data);\quad
+$v \leftarrow D_\sigma(255(x+u)/\text{peak})$, then $\max(v,0)$ (denoise);\quad $u \leftarrow u + (x-v)$ (dual).
+\end{quote}
+The dual variable accumulates the mismatch and fills the null space over the iterations. This one
+difference from PnP changes everything about how it is tuned.
+
+\paragraph{Parameters, and why it is the opposite of PnP.}
+The denoiser, its level $\sigma$, and the penalty $\rho$. The prior's overall strength is the
+product $\rho\sigma^2$ --- confirmed experimentally: at fixed $\rho\sigma^2$ the result is
+essentially unchanged (e.g. $\sigma{=}25,\rho{=}0.1$ and $\sigma{=}50,\rho{=}0.03$ agree), and
+$\rho\sigma^2 \approx 70$ is the sweet spot. \textbf{Crucially, $\rho$ is \emph{not} the
+eigenvalue threshold that $\lambda_{kz}$ is in PnP}: the dual variable does the null-space filling,
+so a \emph{low} $\rho$ (a moderate prior) wins and a large $\rho$ over-smooths --- the exact
+opposite of PnP, where a high $\lambda_{kz}$ was needed.
+
+\paragraph{Standard use.}
+Gaussian, $\sigma=25$, $\rho=0.1$ --- a reasonable default already close to the good regime.
+
+\paragraph{Optimal use.}
+The one firm rule: \textbf{TV~Bregman --- the PnP winner --- \emph{collapses} in the dual
+iteration} (its data fit blows up, $\texttt{chi2\_ratio}\gg1$), everywhere. Among the rest,
+\textbf{Gaussian} wins on the continuous membrane (its smooth linear filling suits a smooth object),
+while \textbf{DCT} often leads on the sparse structures under noise --- so the winner is
+object-dependent, but never TV~Bregman. Tune $\rho\sigma^2\approx70$ (e.g. $\sigma{=}50$,
+$\rho{=}0.03$) with \texttt{iter}${=}50$. The measured figures per structure:
+\IfFileExists{tables/algo_admm_pnp.tex}{\input{tables/algo_admm_pnp}}%
+  {\emph{[pending the run]}}
+
+\noindent Which denoiser wins on each object --- note that TV~Bregman, best in PnP, is worst here:
+\IfFileExists{tables/denoisers_admm_pnp.tex}{\input{tables/denoisers_admm_pnp}}{}
+
+\paragraph{When it works, when it fails.}
+ADMM-PnP is typically the strongest reconstructor under noise on these structures. Its limits are
+the family's: the denoiser must be fed at the right scale ($\div\text{peak}$, handled by the
+framework), and it runs a 3D denoise on the full volume every iteration --- the memory- and
+time-binding constraint on a large real stack (Sec.~\ref{sec:comparison}), which needs a
+tiling/precision budget before running on full real volumes. The headline for a successor: with the
+dual variable, tune a \emph{moderate} $\rho\sigma^2$ and avoid TV~Bregman (it collapses) --- the
+opposite of PnP, where a strong prior at a high $\lambda_{kz}$ is what works.

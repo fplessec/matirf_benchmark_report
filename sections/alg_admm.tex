@@ -1,0 +1,48 @@
+\section{ADMM --- sparsity by soft thresholding}
+\label{sec:admm}
+
+\paragraph{How it works.}
+ADMM is the MAP estimator for a \emph{sparse}, non-negative object under Gaussian noise: its
+prior is hard-wired ($\ell_1$ + positivity), so it ignores $R$, $\lambda$, $\kappa$. It alternates
+a data step, a soft threshold and a dual update:
+\begin{quote}\small
+$t = \kappa\, \max(g)/s_1$ (threshold);\quad
+$u \leftarrow (H^{\!\top}\!H+\mu I)^{-1}(H^{\!\top} g + \mu(f-\eta))$;\quad
+$f \leftarrow \max(u+\eta-t,\,0)$;\quad $\eta \leftarrow \eta + \mu(u-f)$.
+\end{quote}
+The Laplacian prior $\exp(-\tau\lVert f\rVert_1)$ says ``most voxels are ${\approx}0$, a few are
+bright'' --- the right model for point-like / filamentary structures, the wrong one for a
+continuous membrane.
+
+\paragraph{Parameters.}
+Two knobs move the solution, and awkwardly. The threshold ratio $\kappa$ (\texttt{threshold\_ratio})
+sets the sparsity, but its useful band cannot be predicted a priori --- the data step spreads the
+object across the ${\sim}47$ null-space directions, so every voxel of the ridge estimate is small
+and a diffuse truth can be emptied by a modest $\kappa$. The penalty $\mu$ carries \emph{three}
+coupled roles at once (data-step ridge, prior weight $\tau=\mu\kappa\max(g)/s_1$, and dual step),
+and the dual step caps it: $\mu > 1.618$ oscillates or diverges (measured: $\mu=2.5\to$ NaN).
+\texttt{iter}$=200$ is a generous budget (the default 20 is under-iterated).
+
+\paragraph{Standard use.}
+$\kappa=0.1$, $\mu=0.5$ ($\approx s_3^2$, inside the stable band). On a concentrated object at
+low noise this is already close to the best ADMM can do.
+
+\paragraph{Optimal use.}
+Sweep $\kappa$ log-spaced (here $\kappa\in\{0.1,\,0.01\}$) and raise it with the noise; keep
+$\mu \in [s_3^2,\,1.6] = [0.3,\,1.6]$. The measured standard-vs-optimal figures:
+\IfFileExists{tables/algo_admm.tex}{\input{tables/algo_admm}}%
+  {\emph{[pending the run]}}
+
+\IfFileExists{figures/matirf_vesicles_ADMM_noise00.png}{%
+\begin{figure}[H]\centering
+  \includegraphics[width=.7\linewidth]{matirf_vesicles_ADMM_noise00}
+  \caption{ADMM on \texttt{vesicles} at zero noise --- where the sparsity prior localises the
+  point-like structure well.}
+\end{figure}}{}
+
+\paragraph{When it works, when it fails.}
+ADMM's wall is its prior. On a diffuse or continuous object $\ell_1$ is the wrong model, so there
+is little-to-no useful $\kappa$ band: $\kappa$ too large empties the image (the dominant failure,
+and it arrives early), $\kappa\approx0$ is noisy and lets \texttt{iter} become an accidental
+regulariser. Concentrated truths (vesicles, filaments) have a band, but a narrow one. Use ADMM
+for sparse objects at low noise; do not expect it to reconstruct a membrane.

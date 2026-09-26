@@ -1,0 +1,33 @@
+\section{Decision guide}
+\label{sec:decision}
+
+The actionable one page.
+
+\begin{center}
+\begin{tabular}{p{4.3cm}p{3.0cm}p{5.6cm}}
+\toprule
+your data & use & starting parameters \\
+\midrule
+sparse object, low noise & \textbf{ADMM} & $\kappa \in [0.01, 0.3]$ (raise with noise),
+                          $\mu \in [0.5, 1]$ \\
+continuous object, noisy & \textbf{ADMM-PnP} & Gaussian, $\sigma \in [25, 50]$ (raise with noise),
+                          $\rho \approx 0.1$ \\
+most versatile / unsure & \textbf{Adam} & L1, $\lambda \approx 0.2$ (Tikhonov if you want a smooth
+                          prior; $\lambda=0$ only on clean data) \\
+uncertainty / MMSE, or a middle-ground reconstructor & \textbf{MCMC} & TV Bregman, $\sigma \approx 0.01$,
+                          $\lambda_{rr} \approx 5$ (not the default $s_1$); beats the ridge on
+                          MA-TIRF, excels on deconvolution \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\paragraph{Rules of thumb.}
+Noise demands a \emph{stronger} prior --- the best regularisation grows with the noise level.
+Match the prior to the structure: sparsity (Adam~+~L1, or ADMM) for point-like objects, a
+plug-and-play denoiser (ADMM-PnP) for continuous ones; a smooth analytic prior (Tikhonov) is a
+safe but blunt default. There is no universal best denoiser --- match it to the object and noise
+(Gaussian at low noise; TV~Bregman for a membrane, DCT for sparse structures under noise), with one
+firm rule: \textbf{never TV~Bregman inside ADMM-PnP} (it collapses). Budget memory before running
+the PnP family on full real volumes (ADMM-PnP peaked at ${\sim}10$~GB). Every parameter in units of $f$ is on a
+${\sim}0.02$ scale, not $1$ --- including a denoiser $\sigma$, which is why the framework feeds the
+denoiser $255\,f/\text{peak}$.

@@ -1,0 +1,27 @@
+algorithm = "ADMM-PnP"
+
+[input-paths]
+mode = "synthetic-data"
+tif = "/Users/fplessec/Documents/GitHub/matirf_python_plus/problems/matirf/data/measurements/synthetic/vesicles.TIF"
+json = "/Users/fplessec/Documents/GitHub/matirf_python_plus/problems/matirf/data/measurements/synthetic/measurement_parameters.json"
+normalization = "peak"
+
+[oper-params]
+nz = 50
+z0 = 0.0
+zN = 300.0
+normalize = false
+
+[add-noise]
+
+[noise-model]
+
+[algo-params]
+iter = 50
+denoiser = "Gaussian"
+sigma = 25.0
+rho = 0.1
+forced_pos = true
+init = "ridge"
+lambda_rr = 36.24
+delta = 0.0714046275583453

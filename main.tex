@@ -14,9 +14,10 @@
 
 \graphicspath{{figures/}}
 
-% keep it short: the register is technical hand-over, not a journal article.
+% A per-algorithm reference: for each solver, how it works, how to use it by default, and how
+% to use it at its best. Kept technical and short — a hand-over document, not a journal article.
 \title{Reconstruction algorithms for MA-TIRF 3D and 2D deconvolution\\[2pt]
-       \large A comparative benchmark}
+       \large A per-algorithm reference}
 \author{Ferdinand Plesse--Costa}
 \date{\today}
 
@@ -24,30 +25,28 @@
 \maketitle
 
 \begin{abstract}
-\noindent We compare six reconstruction algorithms --- Adam, PPXA, ADMM, PnP-HQS, ADMM-PnP and
-MCMC --- on the MA-TIRF 3D depth-reconstruction problem and, as a well-posed companion, on 2D
-deconvolution. MA-TIRF is severely ill-posed: the forward operator determines only two to three
-of ${\sim}50$ depth directions per column, so the prior --- not the optimiser --- sets the
-ceiling. The headline is therefore not a single winner but a map: match the prior to the object
-(sparsity for point-like structures, a plug-and-play denoiser for continuous ones) and raise it
-with the noise. The report is a hand-over document: for each algorithm it states how to use it,
-when it works, and the intrinsic limit no parameter moves.
+\noindent A reference for the six reconstruction algorithms in \texttt{matirf\_python\_plus} ---
+Adam, PPXA, ADMM, PnP-HQS, ADMM-PnP and MCMC --- on the MA-TIRF 3D depth-reconstruction problem
+and, as a well-posed companion, on 2D deconvolution. MA-TIRF is severely ill-posed: the forward
+operator determines only two to three of ${\sim}50$ depth directions per column, so the prior ---
+not the optimiser --- sets the ceiling. Each algorithm gets one chapter: how it works, its
+\emph{standard} (default) use, its \emph{optimal} use (the best measured parameters), and the
+intrinsic limit no parameter moves. The short preamble fixes the shared facts every chapter
+rests on; a comparison table and a one-page decision guide close the document.
 \end{abstract}
 
 \tableofcontents
 \bigskip
 
-\input{sections/01_introduction}
-\input{sections/02_inverse_problem}
-\input{sections/03_algorithms}
-\input{sections/04_setup}
-\input{sections/05_results}
-\input{sections/06_limits}
-\input{sections/07_decision_guide}
-\input{sections/08_reproducibility}
-
-% Re-enable once the sections actually \cite something (bibtex errors on an empty citation list):
-% \bibliographystyle{plain}
-% \bibliography{refs}
+\input{sections/00_preamble}
+\input{sections/alg_adam}
+\input{sections/alg_ppxa}
+\input{sections/alg_admm}
+\input{sections/alg_pnp}
+\input{sections/alg_admm_pnp}
+\input{sections/alg_mcmc}
+\input{sections/comparison}
+\input{sections/decision_guide}
+\input{sections/reproducibility}
 
 \end{document}

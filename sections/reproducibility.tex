@@ -1,0 +1,35 @@
+\section{Reproducibility}
+\label{sec:repro}
+
+Every number and figure is regenerable from \texttt{matirf\_python\_plus} (tag \texttt{v2.0}) by
+one curated campaign.
+
+\paragraph{Run the campaign.}
+\begin{verbatim}
+python -m benchmarks run        # start (or resume) the curated campaign
+python -m benchmarks status     # how far it got, by status
+python -m benchmarks stop       # stop cleanly before the next run (resumable)
+python -m benchmarks specs -v   # the exact run list, without running anything
+\end{verbatim}
+Add \texttt{-{}-timeout <s>} to cap each run. Every run is an isolated process with a per-run
+timeout; a crash or out-of-memory is contained and the campaign resumes where it stopped. Each
+config is written in full (\texttt{benchmarks/campaign.py}): every parameter a solver reads,
+including the ones held fixed for the whole campaign, is explicit --- so a run reproduces from its
+\texttt{config.toml} alone. Results land in \texttt{benchmarks/results/main/} (git-ignored: large,
+regenerated).
+
+\paragraph{Build this report.}
+\begin{verbatim}
+python -m benchmarks analyze    # writes tables/ + figures/
+latexmk -pdf main.tex
+\end{verbatim}
+\texttt{analyze.py} reads the durable \texttt{journal.jsonl} and writes: one standard-vs-optimal
+table per algorithm (\texttt{tables/algo\_*.tex}), the Adam $\lambda$-shape
+(\texttt{tables/adam\_shape.tex}), the cross-comparison and cost tables, and the
+depth-map/profile PNGs of each showcase reconstruction into \texttt{figures/}. The
+reconstructions themselves are not committed (large, regenerable from the config).
+
+\paragraph{Theory.}
+The a priori analysis and each algorithm's parameter roles are in \texttt{docs/algorithms/}
+(in \texttt{matirf\_python\_plus}); the intrinsic limits in \texttt{docs/algorithms/limits.md}.
+This report distils them into the per-algorithm chapters.

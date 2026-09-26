@@ -16,5 +16,8 @@ parameters = "oracle"
 
 [algo-params]
 max_iter = 300
+K = 50
 denoiser = "TV Bregman"
-sigma = 0.01
+sigma = 0.03
+temperature = 1.0
+init = "ridge"

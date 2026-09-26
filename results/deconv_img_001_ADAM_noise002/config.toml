@@ -15,8 +15,11 @@ seed = 1
 parameters = "oracle"
 
 [algo-params]
-reg = "tv"
-lambda_reg = 0.05
-max_iter = 3000
+reg = "tikhonov"
+lambda_reg = 0.1
+max_iter = 5000
 K = 10
-EPS = 1e-06
+EPS = 1e-08
+lr = 0.1
+init = "ridge"
+delta = 1.0

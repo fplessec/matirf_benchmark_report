@@ -1,0 +1,49 @@
+\section{MCMC --- the MMSE estimator}
+\label{sec:mcmc}
+
+\paragraph{How it works.}
+MCMC is the only \emph{MMSE} method here: it returns the posterior mean $\mathbb{E}[f\mid g]$, not
+a mode, by a Metropolis-Hastings chain that it averages after a burn-in:
+\begin{quote}\small
+$z \leftarrow f + (H^{\!\top}\!H+\lambda_{rr} I)^{-1} H^{\!\top}(g-Hf)$ (pull to the data);\quad
+$z \leftarrow z + \sigma\varepsilon$ (explore);\quad $z \leftarrow D_\sigma(\max(z,0))$ (denoise);\\
+accept $z$ with probability $\min(1, e^{-\Delta D/\beta})$; average the states after burn-in.
+\end{quote}
+The prior enters through the denoiser; the acceptance is a selector and $\beta$ sets how strict it
+is (the target is a \emph{selective} rate ${\approx}0.25$--$0.6$, not saturation). It has no dual
+variable --- like PnP-HQS, and unlike ADMM-PnP.
+
+\paragraph{Parameters.}
+The denoiser and $\sigma$ (exploration \emph{and} denoising strength, a fraction of the peak, so
+it transfers between problems). But the decisive knob is $\lambda_{rr}$, the \textbf{data-step
+ridge}: it corrects the directions with $s_i^2 \gg \lambda_{rr}$ toward the data and leaves the
+rest. Its useful window is $[s_3^2,\,s_2^2] \approx [0.3,\,36]$. The chain also needs enough
+samples (\texttt{max\_iter} with a 25\% burn-in) and a calibrated temperature.
+
+\paragraph{Standard use.}
+The out-of-box default (TV~Bregman, $\sigma=0.02$, automatic $\lambda_{rr}=s_1=38.9$,
+\texttt{max\_iter}=300) is \emph{weak}: $\lambda_{rr}=s_1$ sits \emph{above} the useful window, so
+the data-step barely pulls and the chain drifts.
+
+\paragraph{Optimal use.}
+Bring $\lambda_{rr}$ \emph{into} the window --- $\lambda_{rr}\approx5$ --- and take more samples.
+This is the single largest lever (it moved the reconstruction from ${\approx}$ the drifting default
+to well below the ridge start). The best denoiser is again object-dependent: \textbf{Gaussian} at
+low noise, shifting to \textbf{TV~Bregman} (membrane) or \textbf{DCT} (filaments, point-like) under
+noise. The measured figures per structure:
+\IfFileExists{tables/algo_mcmc.tex}{\input{tables/algo_mcmc}}%
+  {\emph{[pending the run — \texttt{python -m benchmarks analyze}]}}
+
+\noindent Which denoiser wins on each object (point-like / filaments / membrane):
+\IfFileExists{tables/denoisers_mcmc.tex}{\input{tables/denoisers_mcmc}}{}
+
+\paragraph{When it works, when it fails.}
+\textbf{MCMC is a genuine reconstructor on MA-TIRF: it beats the ridge start} (with
+$\lambda_{rr}$ in its window and a denoiser prior), and it \emph{excels} on the well-posed 2D
+deconvolution, where the MMSE mean clearly beats the ridge. This \textbf{corrects} the earlier
+claim (\texttt{docs/algorithms/mcmc.md}, \texttt{limits.md}) that MCMC ``cannot beat the ridge
+start on MA-TIRF'' --- that limit was synthesised from lost data against a weaker configuration
+($\lambda_{rr}=s_1$, the default that under-pulls). With a good $\lambda_{rr}$ MCMC is competitive
+with the MAP methods, though still typically behind the plug-and-play family. Its remaining honest
+limits: the denoiser must be 3D-appropriate, and \texttt{None} (no prior) cannot beat its own
+start.

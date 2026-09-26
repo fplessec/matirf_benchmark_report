@@ -2,6 +2,12 @@
 
 | dataset | noise | best (by NMSE) | params | NMSE | PSNR | Depth Error (nm) | Stack Recovery | chi2_ratio |
 |---|---|---|---|---|---|---|---|---|
-| cell_fibres_vesicles | 0 | **ADMM** | kappa=0.1, mu=0.5 | 0.0409 | 31.5 | 4 | 0.498 | 5.48e-08 |
-| cell_fibres_vesicles | 0.02 | **ADMM-PnP** | denoiser=Gaussian, sigma=25, rho=0.1 | 0.174 | 25.2 | 13 | 0.0651 | 0.872 |
-| cell_fibres_vesicles | 0.05 | **ADMM-PnP** | denoiser=Gaussian, sigma=50, rho=0.1 | 0.367 | 22.0 | 26 | 0.0093 | 0.808 |
+| cell | 0 | **ADMM** | kappa=0.1, mu=0.5 | 0.0318 | 28.8 | 4 | 0.636 | 5.2e-08 |
+| cell | 0.02 | **ADMM-PnP** | denoiser=Gaussian, sigma=50, rho=0.03 | 0.177 | 21.3 | 9 | 0 | 0.96 |
+| cell | 0.05 | **ADMM-PnP** | denoiser=Gaussian, sigma=50, rho=0.03 | 0.307 | 18.9 | 21 | 0 | 0.903 |
+| fibres | 0 | **ADMM** | kappa=0.01, mu=0.5 | 0.0406 | 38.0 | 10 | 0.966 | 4.86e-06 |
+| fibres | 0.02 | **PNP** | denoiser=Gaussian, sigma=25, lambda_kz=12, iter=40 | 0.385 | 28.2 | 59 | 0.0172 | 0.527 |
+| fibres | 0.05 | **PNP** | denoiser=Gaussian, sigma=25, lambda_kz=12, iter=40 | 0.653 | 25.9 | 85 | 0.069 | 0.459 |
+| vesicles | 0 | **ADMM** | kappa=0.01, mu=0.5 | 0.021 | 42.9 | 8 | 1 | 5.3e-06 |
+| vesicles | 0.02 | **MCMC** | denoiser=TV Bregman, sigma=0.02, lambda_rr=38.863, iter=300 | 0.512 | 29.0 | 61 | 1 | 0.609 |
+| vesicles | 0.05 | **PNP** | denoiser=Gaussian, sigma=25, lambda_kz=12, iter=40 | 0.732 | 27.5 | 98 | 0 | 0.435 |

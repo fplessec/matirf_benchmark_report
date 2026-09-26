@@ -1,0 +1,81 @@
+\section{The shared ground}
+\label{sec:preamble}
+
+Everything in the algorithm chapters rests on four facts. They are stated once here; the full
+derivations are in \texttt{matirf\_python\_plus/docs/algorithms/00\_foundation.md}.
+
+\paragraph{1. The forward model.}
+Both problems are linear with a non-negativity constraint,
+\begin{equation}
+  g = Hf + n, \qquad f \ge 0, \qquad \max g = 1,
+  \label{eq:forward}
+\end{equation}
+with $f$ the unknown object, $H$ the known operator, $n$ the detector noise and $g$ the
+peak-normalised measurement. For MA-TIRF, $H$ acts independently in each lateral pixel: it mixes
+the $n_z$ depth planes of a column into the measured angle values, so it is one small
+$n_\theta \times n_z$ matrix applied to every column. For deconvolution $H$ is a convolution with
+a known PSF.
+
+\paragraph{2. The one fact that governs everything --- the spectrum of $H$.}
+The per-column MA-TIRF matrix (13 angles, $n_z=50$ over \SIrange{0}{300}{\nano\meter}, physical
+operator) has singular values that collapse by orders of magnitude:
+\begin{center}
+\begin{tabular}{lccccc}
+\toprule
+ & $s_1$ & $s_2$ & $s_3$ & $s_4$ & $s_5\dots$ \\
+\midrule
+$s$   & 38.9 & 6.02 & 0.562 & 0.033 & $<10^{-3}$ \\
+$s^2$ & $1.5\times10^{3}$ & 36 & 0.32 & $1.1\times10^{-3}$ & \\
+\bottomrule
+\end{tabular}
+\end{center}
+Only two to three depth directions per column are determined by the data; the other ${\sim}47$ of
+50 lie in the numerical null space of $H$. \textbf{The prior --- not the optimiser --- decides
+those ${\sim}47$ directions.} This single fact drives every result: the ceiling on a
+reconstruction is set by the prior, and the universal failure mode is \emph{depth collapse} (the
+object slides or flattens in $z$, exactly where the data are blind). For deconvolution the
+spectrum is continuous and decays smoothly, so ranges tied to the discrete $s_i^2$ do not
+transfer as-is between the two problems.
+
+\paragraph{3. The scale of the unknown.}
+Along the best-determined direction $g_1 = s_1 f_1$ with $\max g = 1$, so $f$ peaks at
+${\approx}1/s_1 \approx 0.02$ on MA-TIRF (and ${\approx}1$ on deconvolution). \textbf{Any
+parameter in units of $f$} --- a step size, a proposal noise, a sparsity threshold, a denoiser
+level --- \textbf{must be compared to ${\sim}0.02$, not to $1$}; a default tuned for a photograph
+is ${\approx}s_1 \approx 40\times$ off. This is the most common way a method that works elsewhere
+silently fails here.
+
+\paragraph{4. Two estimators, one objective.}
+The MAP solvers (Adam, PPXA, ADMM, PnP-HQS, ADMM-PnP) minimise an energy
+\begin{equation}
+  L(f) = (1-\lambda)\, D(Hf,g) + \lambda\,\kappa\, R(f), \qquad f \ge 0,\ \lambda \in [0,1],
+  \label{eq:objective}
+\end{equation}
+with $D$ the per-pixel negative log-likelihood ($\lVert Hf-g\rVert^2/(2 b n_g)$ for Gaussian
+noise of variance $b$), which carries the noise level and sits at ${\approx}\tfrac12$ at the truth
+(a $\chi^2$ anchor, $\texttt{chi2\_ratio}=2D$). $R$ is the regulariser; the scalar
+$\kappa = 1/R(f_{\text{init}})$ rescales it onto $D$'s scale so that $\lambda$ reads as a
+regularisation \emph{share}. The MMSE solver (MCMC) returns the posterior mean by sampling.
+ADMM, PnP and ADMM-PnP hard-wire their prior (a soft threshold, or a denoiser) and do not use
+$R$, $\lambda$ or $\kappa$.
+
+\paragraph{Metrics.}
+Reconstructions with a ground truth are scored by \textbf{NMSE} (overall error, 0 perfect),
+\textbf{PSNR} (the same in dB, monotone in NMSE), \textbf{Depth Error (nm)} (mean axial
+mislocalisation --- \emph{the} MA-TIRF question) and \textbf{Stack Recovery} (fraction of
+\SI{\ge30}{\nano\meter} pairs resolved); 2D deconvolution adds \textbf{SSIM} (unreliable on the
+anisotropic MA-TIRF volume, so deconv-only). Without a truth --- the real \texttt{esoubies} data
+--- the only quality number is \texttt{chi2\_ratio} (data fit, ${\approx}1$ good). Each run also
+records runtime, peak memory and status (ok / rejected / out-of-memory / timeout): a solver that
+runs out of memory on a real stack is disqualified by that alone.
+
+\paragraph{The benchmark behind the numbers.}
+Every measured value below comes from one curated campaign
+(\texttt{matirf\_python\_plus/benchmarks/}, Sec.~\ref{sec:repro}) on \textbf{three primitive
+structures} --- point-like \texttt{vesicles}, filaments \texttt{fibres} and a continuous membrane
+\texttt{cell} --- each across three noise levels $\{0,\,0.02,\,0.05\}$, plus the 2D companion
+\texttt{img\_001} and the real \texttt{esoubies} measurement (reconstructed by every solver). For
+each algorithm the campaign runs its \emph{standard} (default) configuration, its \emph{best-known}
+one, and --- for the denoiser-based methods --- a sweep of denoisers, so the ``standard vs
+optimal'' and ``which denoiser'' tables are measured per structure, not asserted. Testing three
+structures is deliberate: the best prior, and the best denoiser, depend on the object.

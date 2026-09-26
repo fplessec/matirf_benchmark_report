@@ -17,7 +17,12 @@ normalize = false
 [noise-model]
 
 [algo-params]
-lambda_reg = 0.0
-max_iter = 3000
+reg = "l1"
+lambda_reg = 0.2
+max_iter = 5000
 K = 10
-EPS = 1e-06
+EPS = 1e-08
+lr = 0.1
+init = "ridge"
+lambda_rr = 36.24
+delta = 0.0714046275583453

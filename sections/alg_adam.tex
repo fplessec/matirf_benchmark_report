@@ -1,0 +1,61 @@
+\section{Adam --- general MAP minimiser}
+\label{sec:adam}
+
+\paragraph{How it works.}
+Adam minimises the objective~\eqref{eq:objective} by gradient descent with a per-coordinate
+adaptive step, positivity by clamping, a learning rate halved whenever the loss rises, and a
+small-change stop:
+\begin{quote}\small
+$f \leftarrow f_0$ (the ridge $s_2^2$ start);\quad
+repeat: $g_k \leftarrow \nabla L(f)$;\ $f \leftarrow f - \text{lr}\cdot \hat m/(\sqrt{\hat v}+\varepsilon)$;\
+$f \leftarrow \max(f,0)$;\ every $K$ steps halve lr if the loss rose, stop if it barely moved.
+\end{quote}
+Because $\lvert \hat m/\sqrt{\hat v}\rvert \approx 1$, each voxel moves by about \texttt{lr} per
+iteration \emph{whatever the gradient} --- so \texttt{lr} is a displacement in the units of $f$
+(${\sim}0.02$), not a gradient scaling. $L$ is convex, so with a prior that weighs the minimiser
+is unique and Adam reaches it; the reconstruction is then only as good as the analytic prior $R$.
+
+\paragraph{Parameters.}
+The only axes that move the \emph{solution} are the prior \texttt{reg} and its share $\lambda$.
+We compare two priors: \textbf{L1} (sparsity --- few bright voxels) and \textbf{Tikhonov} (the
+L2 of the gradient --- smoothness). Tikhonov is a degree-2 prior, so at $f\approx0.02$ it is
+${\sim}50\times$ weaker than a degree-1 prior for the same nominal $\lambda$ and over-smooths once
+it bites. Everything else is a convergence knob, fixed for the whole campaign: \texttt{lr}$=0.1$
+(large enough to move; the scheduler halves it on overshoot), \texttt{init}$=$ridge with weight
+$\lambda_{rr}=s_2^2=36.24$ (never the adjoint start, ${\sim}850\times$ too large at MA-TIRF
+scale), \texttt{max\_iter}$=5000$ and \texttt{EPS}$=10^{-8}$ so the plateau stop --- not the
+budget --- ends the run.
+
+\paragraph{Standard use.}
+The smooth prior at a moderate share, $\texttt{reg}=\text{Tikhonov}$, $\lambda=0.1$. It is a safe
+default that never empties the image, but it over-smooths depth --- rarely the best prior on the
+sparse structures, though closer to competitive on the continuous membrane.
+
+\paragraph{Optimal use.}
+Match the prior to the object and raise it with the noise. On the sparse structures (filaments,
+vesicles) the sparsity prior L1 has a clear optimum, while the smooth Tikhonov prior only
+over-smooths --- its NMSE stays high and flat:
+\IfFileExists{tables/adam_shape.tex}{\input{tables/adam_shape}}%
+  {\emph{[pending the run — \texttt{python -m benchmarks analyze}]}}
+
+\noindent L1 minimises around $\lambda \approx 0.2$--$0.3$; Tikhonov, being smooth and degree-2,
+cannot localise a filament network and trails it throughout. The prior winner may itself shift with
+the object (the smooth prior is less penalised on a continuous membrane) --- the measured
+standard-vs-optimal figures, per structure:
+\IfFileExists{tables/algo_adam.tex}{\input{tables/algo_adam}}{}
+
+\IfFileExists{figures/matirf_fibres_ADAM_noise002.png}{%
+\begin{figure}[H]\centering
+  \includegraphics[width=.7\linewidth]{matirf_fibres_ADAM_noise002}
+  \caption{Adam's best reconstruction of \texttt{fibres} at noise 0.02 (depth map + $yz/zx$
+  profiles).}
+\end{figure}}{}
+
+\paragraph{When it works, when it fails.}
+Adam has no failure of its own on a well-posed problem: it minimises the energy exactly. On
+MA-TIRF the quality is decided entirely by $R$ and $\lambda$, and none of the analytic priors
+models a cell's depth structure the way a learned denoiser does --- \emph{its ceiling is the
+ceiling of hand-built priors}. The failure modes are at the ends of $\lambda$: $\lambda\to0$ is
+non-negative least squares (noisy / depth-collapsed), $\lambda\to1$ drops the data (empty or
+flat). Adam is the right \emph{engine} and, on MA-TIRF, the wrong \emph{prior}: the gain is in
+the regulariser, not the optimiser.
