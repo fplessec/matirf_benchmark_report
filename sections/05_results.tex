@@ -12,6 +12,86 @@ For each (structure, noise) the solver with the best NMSE, and its curated metri
   {\emph{[pending: run \texttt{python -m benchmarks analyze -{}-minimal}]}}
 \IfFileExists{tables/cross_comparison_deconv.tex}{\input{tables/cross_comparison_deconv}}{}
 
+\subsection{ADAM in depth: the prior sets the ceiling}
+\label{sec:adam-depth}
+The cross-comparison above runs each solver with a single default prior. ADAM, however, sits
+well below its own ceiling until the prior is matched to the structure. To show this we swept the
+regularisation weight $\lambda$ for ADAM on the reference truth \texttt{cell\_fibres\_vesicles}
+at noise $0.02$ --- the same object and noise as the headline row above --- with the fully
+converged settings used throughout the atlas (\texttt{lr}$=0.1$, ridge start, ridge weight
+$s_2^2 = 36.24$, \texttt{EPS}$=10^{-8}$, $5000$ iterations). This refines the campaign's coarse
+$\lambda$ grid, of which it is a superset.
+
+\paragraph{Sparsity (L1) has a clear optimum; total variation does not.}
+\begin{center}\begin{adjustbox}{max width=\linewidth}
+\begin{tabular}{lcc}
+\toprule
+\multicolumn{3}{c}{\textbf{ADAM + L1}} \\
+$\lambda$ & NMSE & $z$-err (nm) \\
+\midrule
+0.01 & 0.618 & 50 \\
+0.02 & 0.590 & 45 \\
+0.05 & 0.512 & 34 \\
+0.10 & 0.401 & 25 \\
+0.15 & 0.319 & 20 \\
+0.20 & 0.270 & 16 \\
+\textbf{0.30} & \textbf{0.268} & \textbf{14} \\
+0.50 & 0.477 & 22 \\
+\bottomrule
+\end{tabular}
+\hskip 3em
+\begin{tabular}{lcc}
+\toprule
+\multicolumn{3}{c}{\textbf{ADAM + TV}} \\
+$\lambda$ & NMSE & $z$-err (nm) \\
+\midrule
+\textbf{0.005} & \textbf{0.480} & 42 \\
+0.010 & 0.487 & 35 \\
+0.015 & 0.505 & 36 \\
+0.020 & 0.519 & 38 \\
+0.030 & 0.542 & 41 \\
+0.050 & 0.571 & 40 \\
+0.070 & 0.589 & 41 \\
+0.100 & 0.614 & 43 \\
+\bottomrule
+\end{tabular}
+\end{adjustbox}\end{center}
+
+\noindent L1 has a well-defined minimum at $\lambda \approx 0.2$--$0.3$ (NMSE $0.27$, depth error
+$14$~nm). TV, on the same object, is \emph{monotone increasing} in $\lambda$: its penalty only
+erodes the depth structure it is meant to regularise, and its floor ($\approx 0.48$) stays far
+above L1's. On a composite of filaments and vesicles the sparsity prior is the right one and
+total-variation smoothing is not. Tuned this way ADAM closes most of the gap to the ADMM-PnP
+winner (NMSE $0.17$) at a fraction of its runtime.
+
+\paragraph{Across the atlas, the best ADAM prior tracks the structure.}
+The setting that minimised NMSE for ADAM at each (structure, noise), over the full prior grid
+(none / L1 / TV / SHV):
+\begin{center}\begin{adjustbox}{max width=\linewidth}
+\begin{tabular}{lllll}
+\toprule
+structure & noise & best prior & NMSE & $z$-err (nm) \\
+\midrule
+\texttt{cell\_fibres\_vesicles} & 0.02 & L1, $\lambda=0.2$ & 0.27 & 16 \\
+\texttt{cell\_fibres\_vesicles} & 0.05 & L1, $\lambda=0.1$ & 0.62 & 29 \\
+\texttt{vesicles} & 0 & L1, $\lambda=0.02$ & 0.068 & 6 \\
+\texttt{vesicles} & 0.02 & TV, $\lambda=0.05$ & 0.30 & 46 \\
+\texttt{vesicles} & 0.05 & TV, $\lambda=0.02$ & 0.69 & 102 \\
+\texttt{deconv} (2D) & 0.02 & SHV, $\lambda=0.5$ & 0.026 & --- \\
+\texttt{deconv} (2D) & 0.05 & SHV, $\lambda=0.5$ & 0.033 & --- \\
+\bottomrule
+\end{tabular}\end{adjustbox}\end{center}
+
+\noindent Sparsity for point-like and composite structures, curvature (SHV) for the smooth 2D
+deconvolution target: the winning prior follows the object. This is the report's thesis in one
+table --- the prior, not the optimiser, sets the ceiling.
+
+\paragraph{PPXA is the costly, fragile member here.} On the same problem PPXA reaches at best
+NMSE $0.46$ (vesicles, noise $0.02$) but at a median $610$~s per run against ADAM's $120$~s, with
+most of its configurations rejected by the realism check or timed out. Where ADAM's prox-free
+gradient scheme converges cheaply, the proximal splitting buys no accuracy at several times the
+cost.
+
 \subsection{Reconstructions by structure and noise}
 The visual heart of the report: each solver's best reconstruction (depth map + $yz$/$zx$
 profiles, exported from the GUI viewers). Figures are generated into \texttt{figures/} by the
