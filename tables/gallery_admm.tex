@@ -1,0 +1,15 @@
+\begin{figure}[H]\centering
+\begin{subfigure}{0.56\linewidth}\centering
+\IfFileExists{figures/matirf_vesicles_ADMM_noise002.png}{\includegraphics[width=\linewidth]{matirf_vesicles_ADMM_noise002}}{}
+\caption*{\footnotesize\texttt{vesicles} --- kappa=0.1, mu=0.5 (NMSE 0.848)}
+\end{subfigure}\par\smallskip
+\begin{subfigure}{0.56\linewidth}\centering
+\IfFileExists{figures/matirf_fibres_ADMM_noise002.png}{\includegraphics[width=\linewidth]{matirf_fibres_ADMM_noise002}}{}
+\caption*{\footnotesize\texttt{fibres} --- kappa=0.1, mu=0.5 (NMSE 0.882)}
+\end{subfigure}\par\smallskip
+\begin{subfigure}{0.56\linewidth}\centering
+\IfFileExists{figures/matirf_cell_ADMM_noise002.png}{\includegraphics[width=\linewidth]{matirf_cell_ADMM_noise002}}{}
+\caption*{\footnotesize\texttt{cell} --- kappa=0.1, mu=0.5 (NMSE 0.619)}
+\end{subfigure}\par\smallskip
+\caption{\textbf{ADMM} --- best reconstruction on each structure at noise 0.02 (depth map + $yz/zx$ profiles; the parameters under each panel reproduce it).}
+\end{figure}

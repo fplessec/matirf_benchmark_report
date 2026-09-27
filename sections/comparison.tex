@@ -1,47 +1,35 @@
 \section{Comparison --- which algorithm, which denoiser, where}
 \label{sec:comparison}
 
-The per-algorithm chapters each tune one method; this section places them side by side across the
-three structures (point-like \texttt{vesicles}, filaments \texttt{fibres}, continuous
-\texttt{cell}) and the real \texttt{esoubies} stack.
-
 \paragraph{Which solver wins.}
 For every (structure, noise) the solver with the best NMSE and its curated metrics:
 \IfFileExists{tables/cross_comparison_matirf.tex}{\input{tables/cross_comparison_matirf}}%
-  {\emph{[pending the run — \texttt{python -m benchmarks analyze}]}}
+  {\emph{[pending the run]}}
 \IfFileExists{tables/cross_comparison_deconv.tex}{\input{tables/cross_comparison_deconv}}{}
+On clean data ADMM (sparsity) wins on all three structures; as noise rises the plug-and-play family
+and MCMC take over.
+
+\paragraph{Which denoiser.}
+There is \textbf{no universal best denoiser} --- it depends on the object, the noise, and the
+algorithm:
+\begin{table}[H]\centering
+\caption{Winning denoiser (best NMSE) per structure, noise, and plug-and-play algorithm.}
+\label{tab:denoisers}
+\IfFileExists{tables/denoiser_winners.tex}{\input{tables/denoiser_winners}}%
+  {\emph{[pending the run]}}
+\end{table}
+Two facts stand out. \emph{One firm algorithm rule}: TV~Bregman collapses inside the dual-variable
+ADMM-PnP on every structure, while it is competitive-to-best in the dual-free PnP and MCMC --- the
+dual, more than a single ``best denoiser'', flips the ranking. \emph{DCT is rehabilitated}: long
+thought unusable on MA-TIRF, it is often second, sometimes first, once fed at the right scale
+($\div\text{peak}$). Bilateral and Wiener, consistently worst, were dropped.
 
 \paragraph{Cost and robustness.}
-Runtime, peak memory and rejection rate per solver --- the practical axis behind the accuracy,
-including the PnP family's memory pressure on the full \texttt{esoubies} volume (every solver is run
-on it):
+Runtime, peak memory and rejection rate per solver --- including the PnP family's memory pressure on
+the full \texttt{esoubies} volume (every solver is run on it):
 \IfFileExists{tables/rejects_and_cost.tex}{\input{tables/rejects_and_cost}}{}
 
-\paragraph{The denoiser depends on the object, the noise, and the algorithm --- there is no
-universal winner.} This is the clearest lesson of the sweeps (Secs.~\ref{sec:pnp}--\ref{sec:mcmc}):
-\begin{itemize}
-\item \textbf{By object and noise.} At \emph{zero} noise a smooth Gaussian denoiser tends to win;
-  \emph{under} noise the winner shifts by structure --- TV~Bregman on the continuous membrane, DCT
-  on the filament network and point-like structures, Gaussian on filaments in PnP. The per-structure
-  tables in each chapter show it: the same method wants a different denoiser on a different object.
-\item \textbf{One firm algorithm rule.} \textbf{TV~Bregman collapses inside ADMM-PnP} (the dual
-  iteration blows up its data fit) on every structure, while it is competitive-to-best in the
-  dual-free PnP and MCMC. So the presence of the dual variable, more than a single ``best denoiser'',
-  is what flips the ranking.
-\item \textbf{DCT rehabilitated.} DCT, long thought unusable on MA-TIRF, is viable --- often second,
-  sometimes first --- once fed at the right scale ($\div\text{peak}$). Bilateral and Wiener,
-  consistently worst, were dropped.
-\item \textbf{Sparsity owns zero noise.} On clean data ADMM's soft threshold wins on all three
-  structures (it localises exactly when noise does not spread the energy); the plug-and-play family
-  and MCMC take over as noise rises.
-\end{itemize}
-
-\paragraph{Corrections to the a priori notes.}
-The benchmark overturns two claims in \texttt{docs/algorithms/}: (i) MCMC \textbf{does} beat the
-ridge start on MA-TIRF (its old default $\lambda_{rr}=s_1$ under-pulled); (ii) DCT is not
-categorically broken here (a scale artefact). Both are reflected in the chapters above.
-
 \paragraph{The pattern.}
-No single algorithm wins everywhere --- the report's thesis is a map, not a champion: match the
-prior to the structure and the noise, and match the denoiser to \emph{both} the object and the
+No single algorithm wins everywhere: the report's thesis is a map, not a champion. Match the prior
+to the structure and the noise, and match the denoiser to \emph{both} the object and the
 algorithm's mechanism (dual or not).

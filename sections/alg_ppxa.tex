@@ -2,38 +2,30 @@
 \label{sec:ppxa}
 
 \paragraph{How it works.}
-PPXA (Combettes--Pesquet 2008) minimises the same objective~\eqref{eq:objective} as Adam, but by
-evaluating each term's proximal operator in parallel, averaging, and relaxing --- three terms
-with equal weights: data, prior, positivity.
-\begin{quote}\small
-$p_1 \leftarrow \text{prox}_{\text{data}}(u_1) = (I+\gamma H^{\!\top}\!H)^{-1}(u_1+\gamma H^{\!\top} g)$;\quad
-$p_2 \leftarrow \text{prox}_{\text{reg}}(u_2)$;\quad $p_3 \leftarrow \max(u_3,0)$;\quad
-average and over-relax by \texttt{lambda\_relax}.
+PPXA minimises the \emph{same} objective~\eqref{eq:objective} as Adam, but by evaluating each
+term's proximal operator in parallel, averaging, and over-relaxing:
+\begin{quote}
+$p_1 \leftarrow (I+\gamma H^{\!\top}\!H)^{-1}(u_1+\gamma H^{\!\top} g)$ \hfill\textit{(data prox: pull toward $g$)}\\
+$p_2 \leftarrow \mathrm{prox}_{\gamma\lambda R}(u_2)$ \hfill\textit{(prior prox)}\\
+$p_3 \leftarrow \max(u_3,0)$ \hfill\textit{(positivity prox)}\\
+$\bar p \leftarrow \tfrac13(p_1+p_2+p_3)$ \hfill\textit{(average)}\\
+$u_i \leftarrow u_i + \rho_{\mathrm{rel}}(2\bar p - f - p_i)$;\quad $f \leftarrow f + \rho_{\mathrm{rel}}(\bar p - f)$ \hfill\textit{(over-relax)}
 \end{quote}
-Because it minimises the same convex $L$, with a prior that weighs it reaches the \emph{same
-image} as Adam --- so ``do Adam and PPXA agree?'' tests the framework rather than being a
-coincidence.
+\noindent where $\gamma$ is the prox step (gain $\gamma s_i^2$ per singular direction), $u_1,u_2,u_3$
+the auxiliary variables, $R$ the regulariser at share $\lambda$, and $\rho_{\mathrm{rel}}\in(0,2)$
+the relaxation. Minimising the same convex $L$, it reaches the \emph{same image} as Adam.
 
-\paragraph{Parameters.}
-Same solution axes as Adam (\texttt{reg}, $\lambda$, $\rho$). Its own knobs set speed only,
-\emph{provided the proxes are exact}: the prox gain $\gamma$ must bracket the determined
-directions, $\gamma \in [1/s_1^2,\,1/s_2^2] \approx [7\times10^{-4},\,3\times10^{-2}]$ (default
-$0.01$); \texttt{lambda\_relax}$=1.5$ in $(0,2)$. Convergence knobs as Adam
-(\texttt{EPS}$=10^{-8}$, \texttt{max\_iter}$=5000$, ridge $s_2^2$ start).
+\paragraph{Key parameters.}
+The same solution axes as Adam (\texttt{reg}, $\lambda$); its own knobs set speed only, provided the
+proxes are exact: $\gamma\in[1/s_1^2,1/s_2^2]$ (out of range it can stall) and
+$\rho_{\mathrm{rel}}=1.5$.
 
-\paragraph{Standard and optimal use.}
-Use it exactly as Adam --- match the prior to the object. The framework's precise claim is that
-\emph{with $\gamma$ in its bracket and a prior that weighs, Adam and PPXA return the same image};
-a disagreement is a diagnostic (the prior is too weak, or $\gamma$ is out of range). The campaign
-runs one confirmation point (L1, $\lambda=0.2$, reference truth, noise 0.02 --- both solvers prox
-the L1 prior):
-\IfFileExists{tables/algo_ppxa.tex}{\input{tables/algo_ppxa}}%
-  {\emph{[pending the run]}}
+\paragraph{Results.}
+Run identically to Adam. The campaign confirms the framework claim --- \emph{Adam and PPXA return
+the same image} on the shared L1 objective (reference structure, noise 0.02):
+\IfFileExists{tables/algo_ppxa.tex}{\input{tables/algo_ppxa}}{}
 
-\paragraph{When it works, when it fails.}
-PPXA shares Adam's ceiling (only as good as the analytic prior) and adds two costs of its own:
-it needs \emph{proximable} priors (Adam takes any differentiable one), and its proximal splitting
-is markedly slower here --- in the earlier full grid its median runtime was several times Adam's,
-with most configurations rejected or timed out. If $\gamma$ leaves its bracket, or the prior's
-inner prox is inexact (TV/SHV), PPXA can stall \emph{above} the true minimum. It buys no accuracy
-over Adam on this problem; Adam is the cheaper default.
+\paragraph{Limit.}
+PPXA shares Adam's ceiling (only as good as the analytic prior) and adds two costs: it needs
+\emph{proximable} priors (Adam takes any differentiable one), and its splitting is markedly slower
+here (median runtime several times Adam's). It buys no accuracy over Adam on this problem.

@@ -1,0 +1,15 @@
+\begin{figure}[H]\centering
+\begin{subfigure}{0.56\linewidth}\centering
+\IfFileExists{figures/matirf_vesicles_MCMC_noise002.png}{\includegraphics[width=\linewidth]{matirf_vesicles_MCMC_noise002}}{}
+\caption*{\footnotesize\texttt{vesicles} --- denoiser=TV Bregman, sigma=0.02, lambda\_rr=38.863, iter=300 (NMSE 0.512)}
+\end{subfigure}\par\smallskip
+\begin{subfigure}{0.56\linewidth}\centering
+\IfFileExists{figures/matirf_fibres_MCMC_noise002.png}{\includegraphics[width=\linewidth]{matirf_fibres_MCMC_noise002}}{}
+\caption*{\footnotesize\texttt{fibres} --- denoiser=TV Bregman, sigma=0.02, lambda\_rr=38.863, iter=300 (NMSE 0.429)}
+\end{subfigure}\par\smallskip
+\begin{subfigure}{0.56\linewidth}\centering
+\IfFileExists{figures/matirf_cell_MCMC_noise002.png}{\includegraphics[width=\linewidth]{matirf_cell_MCMC_noise002}}{}
+\caption*{\footnotesize\texttt{cell} --- denoiser=TV Bregman, sigma=0.01, lambda\_rr=5, iter=300 (NMSE 0.235)}
+\end{subfigure}\par\smallskip
+\caption{\textbf{MCMC} --- best reconstruction on each structure at noise 0.02 (depth map + $yz/zx$ profiles; the parameters under each panel reproduce it).}
+\end{figure}

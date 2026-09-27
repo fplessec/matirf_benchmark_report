@@ -1,0 +1,15 @@
+\begin{figure}[H]\centering
+\begin{subfigure}{0.56\linewidth}\centering
+\IfFileExists{figures/matirf_vesicles_PNP_noise002.png}{\includegraphics[width=\linewidth]{matirf_vesicles_PNP_noise002}}{}
+\caption*{\footnotesize\texttt{vesicles} --- denoiser=Gaussian, sigma=25, lambda\_kz=12, iter=40 (NMSE 0.522)}
+\end{subfigure}\par\smallskip
+\begin{subfigure}{0.56\linewidth}\centering
+\IfFileExists{figures/matirf_fibres_PNP_noise002.png}{\includegraphics[width=\linewidth]{matirf_fibres_PNP_noise002}}{}
+\caption*{\footnotesize\texttt{fibres} --- denoiser=Gaussian, sigma=25, lambda\_kz=12, iter=40 (NMSE 0.385)}
+\end{subfigure}\par\smallskip
+\begin{subfigure}{0.56\linewidth}\centering
+\IfFileExists{figures/matirf_cell_PNP_noise002.png}{\includegraphics[width=\linewidth]{matirf_cell_PNP_noise002}}{}
+\caption*{\footnotesize\texttt{cell} --- denoiser=TV Bregman, sigma=40, lambda\_kz=12, iter=40 (NMSE 0.262)}
+\end{subfigure}\par\smallskip
+\caption{\textbf{PNP} --- best reconstruction on each structure at noise 0.02 (depth map + $yz/zx$ profiles; the parameters under each panel reproduce it).}
+\end{figure}

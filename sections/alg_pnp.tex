@@ -2,53 +2,37 @@
 \label{sec:pnp}
 
 \paragraph{How it works.}
-Plug-and-Play half-quadratic splitting replaces the prior's proximal operator by a
-\emph{denoiser} $D_\sigma$, run over a short coarse-to-fine annealing schedule (not to
-convergence):
-\begin{quote}\small
-$f \leftarrow (H^{\!\top}\!H+\alpha_k I)^{-1}(H^{\!\top} g + \alpha_k z)$ (data step);\quad
-$z \leftarrow D_{\sigma_k}(255\,f/\text{peak})$ (denoise, scale-free);\quad $\sigma_k \downarrow$,
-$\alpha_k \uparrow$ over \texttt{iter} steps.
+Plug-and-Play half-quadratic splitting replaces the prior's proximal operator by a \emph{denoiser}
+$D_\sigma$, over a short coarse-to-fine annealing schedule (not to convergence):
+\begin{quote}
+$z \leftarrow f_0$ \hfill\textit{(start: the ridge $s_2^2$ estimate)}\\
+\textbf{for} $k = 1 \dots \texttt{iter}$, with $\sigma_k\!\downarrow$ and $\alpha_k\!\uparrow$:\\
+\hspace{1.2em}$f \leftarrow (H^{\!\top}\!H+\alpha_k I)^{-1}(H^{\!\top} g + \alpha_k z)$ \hfill\textit{(data step: fit $g$, pulled toward $z$)}\\
+\hspace{1.2em}$z \leftarrow \tfrac{\text{peak}}{255}\,D_{\sigma_k}\!\big(255\,f/\text{peak}\big)$ \hfill\textit{(denoise at level $\sigma_k$, scale-free)}
 \end{quote}
-Direction by direction, $s_i^2 \gg \alpha$ follows the data and $s_i^2 \ll \alpha$ keeps the
-denoised $z$: on MA-TIRF ${\sim}47$ of 50 depth directions are of the second kind, so
-\textbf{the reconstruction's depth structure is essentially the denoiser's}. It has no dual
-variable, so the schedule alone must drive the prior in.
+\noindent where $D_\sigma$ is the denoiser, $\sigma_k$ its level (annealed from $\sigma$ down to the
+measurement's noise), $\alpha_k$ the data-coupling weight (annealed \emph{up} to
+$\lambda_{kz}=\alpha_{\text{final}}$), and $\text{peak}$ the start's peak. Since $s_i^2\ll\alpha$
+keeps the denoised $z$, the ${\sim}47$ null-space directions are the denoiser's --- it has no dual
+variable, so the schedule alone drives the prior in.
 
-\paragraph{Parameters, and what $\lambda_{kz}$ means.}
-The denoiser and its level $\sigma$, and the final data weight $\lambda_{kz}=\alpha_{\text{final}}$.
-By the data step, $\lambda_{kz}$ is a \textbf{threshold on the eigenvalues} $s_i^2$: it decides how
-many directions follow the data at the end. On the MA-TIRF spectrum
-($s_1^2{=}1500,\,s_2^2{=}36,\,s_3^2{=}0.32$), $\lambda_{kz}\approx12$ sits in the band
-$(s_3^2,\,s_2^2)$, so \emph{only $s_1,s_2$ follow the data and the whole null space is handed to
-the prior} --- which is what a severely ill-posed problem needs. (The DPIR default
-$\lambda_{kz}=0.23$, from Kai Zhang et al., is tuned for the continuous spectrum of deconvolution,
-where many directions are trusted; it under-uses the prior here.) The schedule length \texttt{iter}
-is also a real lever --- more steps keep improving on this ill-posed problem, past the usual
+\paragraph{Key parameters.}
+The denoiser and its level $\sigma$; the final data weight $\lambda_{kz}=\alpha_{\text{final}}$ is a
+\textbf{threshold on the eigenvalues} $s_i^2$: at $\lambda_{kz}\approx12$ only $s_1,s_2$ follow the
+data and the whole null space goes to the prior --- what an ill-posed problem needs. (The DPIR
+default $\lambda_{kz}=0.23$, tuned for deconvolution, under-uses the prior and is data-starved
+here.) \texttt{iter} is a real lever too --- more schedule steps keep improving, past the usual
 $[8,30]$.
 
-\paragraph{Standard use.}
-The DPIR default (Gaussian, $\sigma=25$, $\lambda_{kz}=0.23$, \texttt{iter}=16) is data-starved
-here and barely beats the no-prior baseline.
+\paragraph{Results.}
+With $\lambda_{kz}\approx12$, \texttt{iter}${\approx}40$ and the right denoiser, PnP reconstructs
+well; the best denoiser depends on the object (Table~\ref{tab:denoisers}) --- Gaussian on the
+filament network, TV~Bregman on the membrane under noise, DCT competitive.
+\IfFileExists{tables/gallery_pnp.tex}{\input{tables/gallery_pnp}}{}
 
-\paragraph{Optimal use.}
-Raise $\lambda_{kz}$ into the band ($\approx12$), lengthen the schedule (\texttt{iter}${\approx}40$),
-and pick the prior \emph{for the object}: there is \textbf{no universal best denoiser}. Measured,
-\textbf{Gaussian} wins on the filament network, \textbf{TV~Bregman} on the continuous membrane under
-noise, and the point-like case is split with DCT --- so the choice follows the structure and the
-noise. The standard-vs-optimal figures per structure:
-\IfFileExists{tables/algo_pnp.tex}{\input{tables/algo_pnp}}%
-  {\emph{[pending the run]}}
-
-\noindent Which denoiser wins on each object (the winner shifts --- this is the point):
-\IfFileExists{tables/denoisers_pnp.tex}{\input{tables/denoisers_pnp}}{}
-
-\paragraph{When it works, when it fails.}
-Two intrinsic limits. \emph{Scale}: a denoiser is only a transferable prior if it is fed at the
-scale it was built for --- the framework feeds $255\,f/\text{peak}$, which is what makes even DCT
-usable on MA-TIRF (\emph{contradicting} the older claim that DCT always erases the image; that was
-a scale artefact, removed by the $\div\text{peak}$ normalisation). \emph{Cost}: PnP runs a 3D
-denoise on the full volume every schedule step, so on a large real stack it is memory- and
-time-hungry (Sec.~\ref{sec:comparison}). Because it has no dual variable, PnP needs a high
-$\lambda_{kz}$ (a strong prior driven into the null space) --- but the best denoiser is
-object-dependent, not a fixed choice.
+\paragraph{Limit.}
+Two intrinsic limits. \emph{Scale}: a denoiser transfers only if fed at the scale it was built for
+--- the $255\,f/\text{peak}$ bridge is what makes even DCT usable on MA-TIRF (it is \emph{not}
+categorically broken, contrary to the naive-scale belief). \emph{Cost}: a 3D denoise on the full
+volume every schedule step makes it memory- and time-hungry on a real stack (Sec.~\ref{sec:comparison}).
+Being dual-free, PnP needs a high $\lambda_{kz}$ to force the denoiser into the null space.

@@ -1,0 +1,15 @@
+\begin{figure}[H]\centering
+\begin{subfigure}{0.56\linewidth}\centering
+\IfFileExists{figures/matirf_vesicles_ADAM_noise002.png}{\includegraphics[width=\linewidth]{matirf_vesicles_ADAM_noise002}}{}
+\caption*{\footnotesize\texttt{vesicles} --- reg=tikhonov, lambda=0.1 (NMSE 0.552)}
+\end{subfigure}\par\smallskip
+\begin{subfigure}{0.56\linewidth}\centering
+\IfFileExists{figures/matirf_fibres_ADAM_noise002.png}{\includegraphics[width=\linewidth]{matirf_fibres_ADAM_noise002}}{}
+\caption*{\footnotesize\texttt{fibres} --- reg=tikhonov, lambda=0.05 (NMSE 0.405)}
+\end{subfigure}\par\smallskip
+\begin{subfigure}{0.56\linewidth}\centering
+\IfFileExists{figures/matirf_cell_ADAM_noise002.png}{\includegraphics[width=\linewidth]{matirf_cell_ADAM_noise002}}{}
+\caption*{\footnotesize\texttt{cell} --- reg=l1, lambda=0.2 (NMSE 0.277)}
+\end{subfigure}\par\smallskip
+\caption{\textbf{ADAM} --- best reconstruction on each structure at noise 0.02 (depth map + $yz/zx$ profiles; the parameters under each panel reproduce it).}
+\end{figure}

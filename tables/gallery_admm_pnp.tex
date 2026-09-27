@@ -1,0 +1,15 @@
+\begin{figure}[H]\centering
+\begin{subfigure}{0.56\linewidth}\centering
+\IfFileExists{figures/matirf_vesicles_ADMM-PnP_noise002.png}{\includegraphics[width=\linewidth]{matirf_vesicles_ADMM-PnP_noise002}}{}
+\caption*{\footnotesize\texttt{vesicles} --- denoiser=Gaussian, sigma=25, rho=0.1 (NMSE 0.546)}
+\end{subfigure}\par\smallskip
+\begin{subfigure}{0.56\linewidth}\centering
+\IfFileExists{figures/matirf_fibres_ADMM-PnP_noise002.png}{\includegraphics[width=\linewidth]{matirf_fibres_ADMM-PnP_noise002}}{}
+\caption*{\footnotesize\texttt{fibres} --- denoiser=Gaussian, sigma=25, rho=0.1 (NMSE 0.509)}
+\end{subfigure}\par\smallskip
+\begin{subfigure}{0.56\linewidth}\centering
+\IfFileExists{figures/matirf_cell_ADMM-PnP_noise002.png}{\includegraphics[width=\linewidth]{matirf_cell_ADMM-PnP_noise002}}{}
+\caption*{\footnotesize\texttt{cell} --- denoiser=Gaussian, sigma=50, rho=0.03 (NMSE 0.177)}
+\end{subfigure}\par\smallskip
+\caption{\textbf{ADMM-PnP} --- best reconstruction on each structure at noise 0.02 (depth map + $yz/zx$ profiles; the parameters under each panel reproduce it).}
+\end{figure}

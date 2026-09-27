@@ -2,23 +2,23 @@
 
 ### matirf
 
-| use | dataset | noise | params | NMSE | PSNR | Depth Error (nm) | Stack Recovery | chi2_ratio |
-|---|---|---|---|---|---|---|---|---|
-| standard | cell | 0 | denoiser=Gaussian, sigma=25, lambda_kz=0.23, iter=16 | 0.32 | 18.7 | 10 | 0.121 | 2.03e-05 |
-| optimal | cell | 0 | denoiser=DCT, sigma=18, lambda_kz=6, iter=40 | 0.191 | 21.0 | 11 | 0.924 | 2.67e-06 |
-| standard | cell | 0.02 | denoiser=Gaussian, sigma=25, lambda_kz=0.23, iter=16 | 0.64 | 15.7 | 47 | 0.0152 | 8.25 |
-| optimal | cell | 0.02 | denoiser=TV Bregman, sigma=40, lambda_kz=12, iter=40 | 0.262 | 19.6 | 16 | 0.0758 | 0.755 |
-| standard | cell | 0.05 | denoiser=Gaussian, sigma=25, lambda_kz=0.23, iter=16 | 0.818 | 14.7 | 64 | 0.0455 | 3.87 |
-| optimal | cell | 0.05 | denoiser=TV Bregman, sigma=40, lambda_kz=12, iter=40 | 0.437 | 17.4 | 26 | 0.0606 | 0.685 |
-| optimal | esoubies | native | denoiser=TV Bregman, sigma=40, lambda_kz=12, iter=40 | — | — | — | — | 57 |
-| standard / optimal | fibres | 0 | denoiser=Gaussian, sigma=25, lambda_kz=0.23, iter=16 | 0.111 | 33.6 | 21 | 0.103 | 0.00615 |
-| standard | fibres | 0.02 | denoiser=Gaussian, sigma=25, lambda_kz=0.23, iter=16 | 0.864 | 24.7 | 72 | 0.0259 | 3.14 |
-| optimal | fibres | 0.02 | denoiser=Gaussian, sigma=25, lambda_kz=12, iter=40 | 0.385 | 28.2 | 59 | 0.0172 | 0.527 |
-| standard | fibres | 0.05 | denoiser=Gaussian, sigma=25, lambda_kz=0.23, iter=16 | 0.945 | 24.3 | 93 | 0.069 | 0.968 |
-| optimal | fibres | 0.05 | denoiser=Gaussian, sigma=25, lambda_kz=12, iter=40 | 0.653 | 25.9 | 85 | 0.069 | 0.459 |
-| standard / optimal | vesicles | 0 | denoiser=Gaussian, sigma=25, lambda_kz=0.23, iter=16 | 0.186 | 33.4 | 15 | 0 | 0.0101 |
-| standard | vesicles | 0.02 | denoiser=Gaussian, sigma=25, lambda_kz=0.23, iter=16 | 0.898 | 26.6 | 80 | 0 | 2.74 |
-| optimal | vesicles | 0.02 | denoiser=Gaussian, sigma=25, lambda_kz=12, iter=40 | 0.522 | 28.9 | 73 | 0 | 0.506 |
-| standard | vesicles | 0.05 | denoiser=Gaussian, sigma=25, lambda_kz=0.23, iter=16 | 0.971 | 26.2 | 99 | 0 | 0.861 |
-| optimal | vesicles | 0.05 | denoiser=Gaussian, sigma=25, lambda_kz=12, iter=40 | 0.732 | 27.5 | 98 | 0 | 0.435 |
+| dataset | noise | params | NMSE | PSNR | Depth Error (nm) | Stack Recovery | chi2_ratio |
+|---|---|---|---|---|---|---|---|
+| cell | 0 | denoiser=Gaussian, sigma=25, lambda_kz=0.23, iter=16 | 0.32 | 18.7 | 10 | 0.121 | 2.03e-05 |
+| cell | 0 | denoiser=DCT, sigma=18, lambda_kz=6, iter=40 | 0.191 | 21.0 | 11 | 0.924 | 2.67e-06 |
+| fibres | 0 | denoiser=Gaussian, sigma=25, lambda_kz=0.23, iter=16 | 0.111 | 33.6 | 21 | 0.103 | 0.00615 |
+| vesicles | 0 | denoiser=Gaussian, sigma=25, lambda_kz=0.23, iter=16 | 0.186 | 33.4 | 15 | 0 | 0.0101 |
+| cell | 0.02 | denoiser=Gaussian, sigma=25, lambda_kz=0.23, iter=16 | 0.64 | 15.7 | 47 | 0.0152 | 8.25 |
+| cell | 0.02 | denoiser=TV Bregman, sigma=40, lambda_kz=12, iter=40 | 0.262 | 19.6 | 16 | 0.0758 | 0.755 |
+| fibres | 0.02 | denoiser=Gaussian, sigma=25, lambda_kz=0.23, iter=16 | 0.864 | 24.7 | 72 | 0.0259 | 3.14 |
+| fibres | 0.02 | denoiser=Gaussian, sigma=25, lambda_kz=12, iter=40 | 0.385 | 28.2 | 59 | 0.0172 | 0.527 |
+| vesicles | 0.02 | denoiser=Gaussian, sigma=25, lambda_kz=0.23, iter=16 | 0.898 | 26.6 | 80 | 0 | 2.74 |
+| vesicles | 0.02 | denoiser=Gaussian, sigma=25, lambda_kz=12, iter=40 | 0.522 | 28.9 | 73 | 0 | 0.506 |
+| cell | 0.05 | denoiser=Gaussian, sigma=25, lambda_kz=0.23, iter=16 | 0.818 | 14.7 | 64 | 0.0455 | 3.87 |
+| cell | 0.05 | denoiser=TV Bregman, sigma=40, lambda_kz=12, iter=40 | 0.437 | 17.4 | 26 | 0.0606 | 0.685 |
+| fibres | 0.05 | denoiser=Gaussian, sigma=25, lambda_kz=0.23, iter=16 | 0.945 | 24.3 | 93 | 0.069 | 0.968 |
+| fibres | 0.05 | denoiser=Gaussian, sigma=25, lambda_kz=12, iter=40 | 0.653 | 25.9 | 85 | 0.069 | 0.459 |
+| vesicles | 0.05 | denoiser=Gaussian, sigma=25, lambda_kz=0.23, iter=16 | 0.971 | 26.2 | 99 | 0 | 0.861 |
+| vesicles | 0.05 | denoiser=Gaussian, sigma=25, lambda_kz=12, iter=40 | 0.732 | 27.5 | 98 | 0 | 0.435 |
+| esoubies | native | denoiser=TV Bregman, sigma=40, lambda_kz=12, iter=40 | — | — | — | — | 57 |
 

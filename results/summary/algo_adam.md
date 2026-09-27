@@ -2,31 +2,31 @@
 
 ### matirf
 
-| use | dataset | noise | params | NMSE | PSNR | Depth Error (nm) | Stack Recovery | chi2_ratio |
-|---|---|---|---|---|---|---|---|---|
-| standard | cell | 0 | reg=tikhonov, lambda=0.1 | 0.72 | 15.2 | 60 | 0 | 0.00507 |
-| optimal | cell | 0 | reg=none, lambda=0 | 0.476 | 17.0 | 21 | 0 | 1.17e-06 |
-| standard | cell | 0.02 | reg=tikhonov, lambda=0.1 | 0.534 | 16.5 | 26 | 0.0758 | 0.653 |
-| optimal | cell | 0.02 | reg=l1, lambda=0.2 | 0.277 | 19.4 | 16 | 0 | 0.591 |
-| standard | cell | 0.05 | reg=tikhonov, lambda=0.1 | 0.584 | 16.1 | 30 | 0.0606 | 0.615 |
-| optimal | cell | 0.05 | reg=l1, lambda=0.2 | 0.487 | 16.9 | 22 | 0 | 0.596 |
-| optimal | esoubies | native | reg=l1, lambda=0.2 | — | — | — | — | 18.9 |
-| standard | fibres | 0 | reg=tikhonov, lambda=0.1 | 0.321 | 29.0 | 58 | 0.241 | 0.0298 |
-| optimal | fibres | 0 | reg=none, lambda=0 | 0.0812 | 34.9 | 14 | 0 | 1.59e-05 |
-| standard | fibres | 0.02 | reg=tikhonov, lambda=0.1 | 0.429 | 27.7 | 72 | 0.0431 | 0.433 |
-| optimal | fibres | 0.02 | reg=tikhonov, lambda=0.05 | 0.405 | 28.0 | 66 | 0.0862 | 0.415 |
-| standard / optimal | fibres | 0.05 | reg=tikhonov, lambda=0.1 | 0.679 | 25.7 | 115 | 0.0431 | 0.411 |
-| standard | vesicles | 0 | reg=tikhonov, lambda=0.1 | 0.481 | 29.3 | 69 | 0.5 | 0.048 |
-| optimal | vesicles | 0 | reg=none, lambda=0 | 0.0697 | 37.7 | 2 | 0 | 1.1e-05 |
-| standard / optimal | vesicles | 0.02 | reg=tikhonov, lambda=0.1 | 0.552 | 28.7 | 69 | 0 | 0.423 |
-| standard / optimal | vesicles | 0.05 | reg=tikhonov, lambda=0.1 | 0.787 | 27.1 | 146 | 0 | 0.391 |
+| dataset | noise | params | NMSE | PSNR | Depth Error (nm) | Stack Recovery | chi2_ratio |
+|---|---|---|---|---|---|---|---|
+| cell | 0 | reg=tikhonov, lambda=0.1 | 0.72 | 15.2 | 60 | 0 | 0.00507 |
+| cell | 0 | reg=none, lambda=0 | 0.476 | 17.0 | 21 | 0 | 1.17e-06 |
+| fibres | 0 | reg=tikhonov, lambda=0.1 | 0.321 | 29.0 | 58 | 0.241 | 0.0298 |
+| fibres | 0 | reg=none, lambda=0 | 0.0812 | 34.9 | 14 | 0 | 1.59e-05 |
+| vesicles | 0 | reg=tikhonov, lambda=0.1 | 0.481 | 29.3 | 69 | 0.5 | 0.048 |
+| vesicles | 0 | reg=none, lambda=0 | 0.0697 | 37.7 | 2 | 0 | 1.1e-05 |
+| cell | 0.02 | reg=tikhonov, lambda=0.1 | 0.534 | 16.5 | 26 | 0.0758 | 0.653 |
+| cell | 0.02 | reg=l1, lambda=0.2 | 0.277 | 19.4 | 16 | 0 | 0.591 |
+| fibres | 0.02 | reg=tikhonov, lambda=0.1 | 0.429 | 27.7 | 72 | 0.0431 | 0.433 |
+| fibres | 0.02 | reg=tikhonov, lambda=0.05 | 0.405 | 28.0 | 66 | 0.0862 | 0.415 |
+| vesicles | 0.02 | reg=tikhonov, lambda=0.1 | 0.552 | 28.7 | 69 | 0 | 0.423 |
+| cell | 0.05 | reg=tikhonov, lambda=0.1 | 0.584 | 16.1 | 30 | 0.0606 | 0.615 |
+| cell | 0.05 | reg=l1, lambda=0.2 | 0.487 | 16.9 | 22 | 0 | 0.596 |
+| fibres | 0.05 | reg=tikhonov, lambda=0.1 | 0.679 | 25.7 | 115 | 0.0431 | 0.411 |
+| vesicles | 0.05 | reg=tikhonov, lambda=0.1 | 0.787 | 27.1 | 146 | 0 | 0.391 |
+| esoubies | native | reg=l1, lambda=0.2 | — | — | — | — | 18.9 |
 
 ### deconv
 
-| use | dataset | noise | params | NMSE | PSNR | SSIM | chi2_ratio |
-|---|---|---|---|---|---|---|---|
-| standard | img_001 | 0 | reg=tikhonov, lambda=0.1 | 0.195 | 14.1 | 0.302 | 0.021 |
-| optimal | img_001 | 0 | reg=none, lambda=0 | 0.0191 | 24.4 | 0.694 | 1.96e-07 |
-| standard / optimal | img_001 | 0.02 | reg=tikhonov, lambda=0.1 | 0.0293 | 22.6 | 0.576 | 1.09 |
-| standard / optimal | img_001 | 0.05 | reg=tikhonov, lambda=0.1 | 0.0371 | 21.5 | 0.511 | 1.09 |
+| dataset | noise | params | NMSE | PSNR | SSIM | chi2_ratio |
+|---|---|---|---|---|---|---|
+| img_001 | 0 | reg=tikhonov, lambda=0.1 | 0.195 | 14.1 | 0.302 | 0.021 |
+| img_001 | 0 | reg=none, lambda=0 | 0.0191 | 24.4 | 0.694 | 1.96e-07 |
+| img_001 | 0.02 | reg=tikhonov, lambda=0.1 | 0.0293 | 22.6 | 0.576 | 1.09 |
+| img_001 | 0.05 | reg=tikhonov, lambda=0.1 | 0.0371 | 21.5 | 0.511 | 1.09 |
 
