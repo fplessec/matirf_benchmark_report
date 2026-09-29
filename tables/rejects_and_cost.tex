@@ -1,4 +1,6 @@
-\begin{center}\begin{adjustbox}{max width=\linewidth}
+\begin{center}\begin{minipage}{\linewidth}\centering
+\captionof{table}{Cost and robustness per solver --- runs, rejection rate, failures, median runtime, peak memory and top findings.}
+\begin{adjustbox}{max width=\linewidth}
 \begin{tabular}{lllllll}
 \toprule
 solver & runs & rejected & failed/timeout & median s & max mem (MB) & top findings \\
@@ -10,4 +12,4 @@ MCMC & 39 & 0 (0\%) & 0 & 9.7 & 2236 & no-better×47, depth-shift×17 \\
 PNP & 37 & 0 (0\%) & 0 & 3.7 & 3591 & no-better×40, depth-shift×18 \\
 PPXA & 2 & 0 (0\%) & 0 & 291.7 & 1656 & no-better×3, depth-shift×1 \\
 \bottomrule
-\end{tabular}\end{adjustbox}\end{center}
+\end{tabular}\end{adjustbox}\end{minipage}\end{center}

@@ -1,4 +1,6 @@
-\begin{center}\begin{adjustbox}{max width=\linewidth}
+\begin{center}\begin{minipage}{\linewidth}\centering
+\captionof{table}{Best algorithm by NMSE on deconvolution --- winner per structure and noise level.}
+\begin{adjustbox}{max width=\linewidth}
 \begin{tabular}{llllllll}
 \toprule
 dataset & noise & best (by NMSE) & params & NMSE & PSNR & SSIM & chi2\_ratio \\
@@ -7,4 +9,4 @@ img\_001 & 0 & \textbf{ADAM} & reg=none, lambda=0 & 0.0191 & 24.4 & 0.694 & 1.96
 img\_001 & 0.02 & \textbf{MCMC} & denoiser=TV Bregman, sigma=0.03 & 0.0245 & 23.4 & 0.596 & 0.98 \\
 img\_001 & 0.05 & \textbf{ADAM} & reg=tikhonov, lambda=0.1 & 0.0371 & 21.5 & 0.511 & 1.09 \\
 \bottomrule
-\end{tabular}\end{adjustbox}\end{center}
+\end{tabular}\end{adjustbox}\end{minipage}\end{center}

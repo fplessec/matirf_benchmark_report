@@ -1,4 +1,6 @@
-\begin{center}\begin{adjustbox}{max width=\linewidth}
+\begin{center}\begin{minipage}{\linewidth}\centering
+\captionof{table}{Best algorithm by NMSE on MA-TIRF --- winner per structure and noise level.}
+\begin{adjustbox}{max width=\linewidth}
 \begin{tabular}{lllllllll}
 \toprule
 dataset & noise & best (by NMSE) & params & NMSE & PSNR & Depth Error (nm) & Stack Recovery & chi2\_ratio \\
@@ -13,4 +15,4 @@ vesicles & 0 & \textbf{ADMM} & kappa=0.01, mu=0.5 & 0.021 & 42.9 & 8 & 1 & 5.3e-
 vesicles & 0.02 & \textbf{MCMC} & denoiser=TV Bregman, sigma=0.02, lambda\_rr=38.863, iter=300 & 0.512 & 29.0 & 61 & 1 & 0.609 \\
 vesicles & 0.05 & \textbf{PNP} & denoiser=Gaussian, sigma=25, lambda\_kz=12, iter=40 & 0.732 & 27.5 & 98 & 0 & 0.435 \\
 \bottomrule
-\end{tabular}\end{adjustbox}\end{center}
+\end{tabular}\end{adjustbox}\end{minipage}\end{center}
