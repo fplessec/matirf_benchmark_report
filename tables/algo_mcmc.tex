@@ -1,5 +1,6 @@
-\paragraph{matirf}
-\begin{center}\begin{adjustbox}{max width=\linewidth}
+\begin{center}\begin{minipage}{\linewidth}\centering
+\captionof{table}{MCMC on MA-TIRF --- reconstruction metrics per ground truth and noise level.}
+\begin{adjustbox}{max width=\linewidth}
 \begin{tabular}{llllllll}
 \toprule
 dataset & noise & params & NMSE & PSNR & Depth Error (nm) & Stack Recovery & chi2\_ratio \\
@@ -20,13 +21,14 @@ fibres & 0.05 & denoiser=TV Bregman, sigma=0.02, lambda\_rr=38.863, iter=300 & 0
 vesicles & 0.05 & denoiser=TV Bregman, sigma=0.02, lambda\_rr=38.863, iter=300 & 0.799 & 27.1 & 110 & 1 & 0.435 \\
 esoubies & native & denoiser=TV Bregman, sigma=0.01, lambda\_rr=5, iter=300 & — & — & — & — & 53.2 \\
 \bottomrule
-\end{tabular}\end{adjustbox}\end{center}
-\paragraph{deconv}
-\begin{center}\begin{adjustbox}{max width=\linewidth}
+\end{tabular}\end{adjustbox}\end{minipage}\end{center}
+\begin{center}\begin{minipage}{\linewidth}\centering
+\captionof{table}{MCMC on deconvolution --- reconstruction metrics per noise level.}
+\begin{adjustbox}{max width=\linewidth}
 \begin{tabular}{lllllll}
 \toprule
 dataset & noise & params & NMSE & PSNR & SSIM & chi2\_ratio \\
 \midrule
 img\_001 & 0.02 & denoiser=TV Bregman, sigma=0.03 & 0.0245 & 23.4 & 0.596 & 0.98 \\
 \bottomrule
-\end{tabular}\end{adjustbox}\end{center}
+\end{tabular}\end{adjustbox}\end{minipage}\end{center}

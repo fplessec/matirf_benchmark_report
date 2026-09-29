@@ -1,5 +1,6 @@
-\paragraph{matirf}
-\begin{center}\begin{adjustbox}{max width=\linewidth}
+\begin{center}\begin{minipage}{\linewidth}\centering
+\captionof{table}{PNP on MA-TIRF --- reconstruction metrics per ground truth and noise level.}
+\begin{adjustbox}{max width=\linewidth}
 \begin{tabular}{llllllll}
 \toprule
 dataset & noise & params & NMSE & PSNR & Depth Error (nm) & Stack Recovery & chi2\_ratio \\
@@ -22,4 +23,4 @@ vesicles & 0.05 & denoiser=Gaussian, sigma=25, lambda\_kz=0.23, iter=16 & 0.971 
 vesicles & 0.05 & denoiser=Gaussian, sigma=25, lambda\_kz=12, iter=40 & 0.732 & 27.5 & 98 & 0 & 0.435 \\
 esoubies & native & denoiser=TV Bregman, sigma=40, lambda\_kz=12, iter=40 & — & — & — & — & 57 \\
 \bottomrule
-\end{tabular}\end{adjustbox}\end{center}
+\end{tabular}\end{adjustbox}\end{minipage}\end{center}

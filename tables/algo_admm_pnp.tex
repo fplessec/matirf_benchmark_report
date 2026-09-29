@@ -1,5 +1,6 @@
-\paragraph{matirf}
-\begin{center}\begin{adjustbox}{max width=\linewidth}
+\begin{center}\begin{minipage}{\linewidth}\centering
+\captionof{table}{ADMM-PnP on MA-TIRF --- reconstruction metrics per ground truth and noise level.}
+\begin{adjustbox}{max width=\linewidth}
 \begin{tabular}{llllllll}
 \toprule
 dataset & noise & params & NMSE & PSNR & Depth Error (nm) & Stack Recovery & chi2\_ratio \\
@@ -17,4 +18,4 @@ cell & 0.05 & denoiser=Gaussian, sigma=50, rho=0.03 & 0.307 & 18.9 & 21 & 0 & 0.
 fibres & 0.05 & denoiser=Gaussian, sigma=25, rho=0.1 & 0.845 & 24.8 & 85 & 0 & 0.532 \\
 vesicles & 0.05 & denoiser=TV Bregman, sigma=40, rho=4 & 0.87 & 26.7 & 118 & 0 & 0.956 \\
 \bottomrule
-\end{tabular}\end{adjustbox}\end{center}
+\end{tabular}\end{adjustbox}\end{minipage}\end{center}

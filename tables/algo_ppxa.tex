@@ -1,5 +1,6 @@
-\paragraph{matirf}
-\begin{center}\begin{adjustbox}{max width=\linewidth}
+\begin{center}\begin{minipage}{\linewidth}\centering
+\captionof{table}{PPXA on MA-TIRF --- reconstruction metrics per ground truth and noise level.}
+\begin{adjustbox}{max width=\linewidth}
 \begin{tabular}{llllllll}
 \toprule
 dataset & noise & params & NMSE & PSNR & Depth Error (nm) & Stack Recovery & chi2\_ratio \\
@@ -7,4 +8,4 @@ dataset & noise & params & NMSE & PSNR & Depth Error (nm) & Stack Recovery & chi
 fibres & 0.02 & reg=l1, lambda=0.2 & 0.855 & 24.7 & 73 & 0 & 0.446 \\
 esoubies & native & reg=l1, lambda=0.2 & — & — & — & — & 18.8 \\
 \bottomrule
-\end{tabular}\end{adjustbox}\end{center}
+\end{tabular}\end{adjustbox}\end{minipage}\end{center}

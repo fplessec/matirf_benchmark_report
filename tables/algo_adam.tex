@@ -1,5 +1,6 @@
-\paragraph{matirf}
-\begin{center}\begin{adjustbox}{max width=\linewidth}
+\begin{center}\begin{minipage}{\linewidth}\centering
+\captionof{table}{ADAM on MA-TIRF --- reconstruction metrics per ground truth and noise level.}
+\begin{adjustbox}{max width=\linewidth}
 \begin{tabular}{llllllll}
 \toprule
 dataset & noise & params & NMSE & PSNR & Depth Error (nm) & Stack Recovery & chi2\_ratio \\
@@ -21,9 +22,10 @@ fibres & 0.05 & reg=tikhonov, lambda=0.1 & 0.679 & 25.7 & 115 & 0.0431 & 0.411 \
 vesicles & 0.05 & reg=tikhonov, lambda=0.1 & 0.787 & 27.1 & 146 & 0 & 0.391 \\
 esoubies & native & reg=l1, lambda=0.2 & — & — & — & — & 18.9 \\
 \bottomrule
-\end{tabular}\end{adjustbox}\end{center}
-\paragraph{deconv}
-\begin{center}\begin{adjustbox}{max width=\linewidth}
+\end{tabular}\end{adjustbox}\end{minipage}\end{center}
+\begin{center}\begin{minipage}{\linewidth}\centering
+\captionof{table}{ADAM on deconvolution --- reconstruction metrics per noise level.}
+\begin{adjustbox}{max width=\linewidth}
 \begin{tabular}{lllllll}
 \toprule
 dataset & noise & params & NMSE & PSNR & SSIM & chi2\_ratio \\
@@ -33,4 +35,4 @@ img\_001 & 0 & reg=none, lambda=0 & 0.0191 & 24.4 & 0.694 & 1.96e-07 \\
 img\_001 & 0.02 & reg=tikhonov, lambda=0.1 & 0.0293 & 22.6 & 0.576 & 1.09 \\
 img\_001 & 0.05 & reg=tikhonov, lambda=0.1 & 0.0371 & 21.5 & 0.511 & 1.09 \\
 \bottomrule
-\end{tabular}\end{adjustbox}\end{center}
+\end{tabular}\end{adjustbox}\end{minipage}\end{center}
