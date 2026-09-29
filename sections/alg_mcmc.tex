@@ -19,7 +19,7 @@ acceptance temperature, and $\Delta D$ the change in the data term. It is dual-f
 
 \paragraph{Key parameters.}
 The denoiser and $\sigma$; but the decisive knob is $\lambda_{rr}$, whose useful window is
-$[s_3^2,s_2^2]\approx[0.3,36]$. The out-of-box default $\lambda_{rr}=s_1=38.9$ sits \emph{above} it,
+$[s_3^2,s_2^2]\approx[0.3,36]$. $\lambda_{rr}=s_1=38.9$ sits \emph{above} it,
 so the data step barely pulls and the chain drifts; bring $\lambda_{rr}\approx5$ into the window
 and take enough samples --- this is the single largest lever.
 
@@ -30,7 +30,6 @@ Gaussian at low noise, shifting to TV~Bregman (membrane) or DCT (sparse) as nois
 \IfFileExists{tables/gallery_mcmc.tex}{\input{tables/gallery_mcmc}}{}
 
 \paragraph{Limit.}
-The apparent ``MCMC cannot beat the ridge on MA-TIRF'' is only true of the weak default
-$\lambda_{rr}=s_1$; it is not an intrinsic limit. With a good $\lambda_{rr}$ MCMC is competitive
+With a good $\lambda_{rr}$ MCMC is competitive
 with the MAP methods, though usually behind the plug-and-play family. Its honest limits: the
 denoiser must be 3D-appropriate, and \texttt{None} (no prior) cannot beat its own start.

@@ -3,7 +3,7 @@
 
 \paragraph{How it works.}
 ADMM is the MAP estimator for a \emph{sparse}, non-negative object: its prior is hard-wired
-($\ell_1$ + positivity), so it ignores $R,\lambda,\kappa$. It alternates a data step, a soft
+($\ell_1$ + positivity), so it ignores $R,\lambda,r$. It alternates a data step, a soft
 threshold and a dual update:
 \begin{quote}
 $t \leftarrow \kappa\,\max(g)/s_1$ \hfill\textit{(soft-threshold level)}\\

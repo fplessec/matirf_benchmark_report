@@ -1,8 +1,6 @@
 \section{The shared ground}
 \label{sec:preamble}
 
-Six facts the algorithm chapters rely on.
-
 \paragraph{Forward model.}
 Both problems are linear with positivity:
 \begin{equation}
@@ -11,7 +9,7 @@ Both problems are linear with positivity:
 \end{equation}
 $f$ the object, $H$ the operator (for MA-TIRF, one $n_\theta\times n_z$ matrix per lateral column,
 mixing the $n_z$ depth planes into the angle values; for deconvolution, a PSF convolution), $n$ the
-noise, $g$ peak-normalised.
+additive noise, $g$ peak-normalised.
 
 \paragraph{Ill-posedness.}
 The MA-TIRF per-column operator's singular values collapse:
@@ -41,12 +39,12 @@ is why the denoiser is fed $255\,f/\text{peak}$, not $255\,f$.
 \paragraph{Objective.}
 \textbf{Adam and PPXA} minimise
 \begin{equation}
-  L(f) = (1-\lambda)\, D(Hf,g) + \lambda\,\kappa\, R(f), \qquad f \ge 0,\ \lambda \in [0,1],
+  L(f) = (1-\lambda)\, D(Hf,g) + \lambda\,r\,R(f), \qquad f \ge 0,\ \lambda \in [0,1],
   \label{eq:objective}
 \end{equation}
 with $D = \lVert Hf-g\rVert^2/(2 b n_g)$ (Gaussian noise variance $b$, $n_g$ the pixel count of
 $g$) --- a mean equal to $\tfrac12$ at the truth, so $\texttt{chi2\_ratio}=2D$ --- and
-$\kappa = 1/R(f_{\text{init}})$ making $\lambda$ a regularisation \emph{share}. The others do not
+$r = 1/R(f_{\text{init}})$ making $\lambda$ a regularisation \emph{share}. The others do not
 minimise $L$: \textbf{ADMM} minimises its own $\ell_1$ energy; \textbf{PnP-HQS} and
 \textbf{ADMM-PnP} replace the prior by a denoiser (a fixed point, no explicit energy);
 \textbf{MCMC} returns the posterior \emph{mean} by sampling.
