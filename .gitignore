@@ -14,3 +14,6 @@
 
 # keep the built PDF out of git (regenerated); comment this out to version it
 main.pdf
+
+# JetBrains IDE settings
+.idea/
